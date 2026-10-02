@@ -45,7 +45,7 @@ async function main() {
     try {
       await db.insert(schema.apiKeys).values(apiKey).onConflictDoNothing();
     } catch (e: any) {
-      console.warn(`API Key ${apiKey.keyName} notice:`, e.message);
+      console.warn(`API Key ${apiKey.name} notice:`, e.message);
     }
   }
 
