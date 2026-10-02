@@ -3,6 +3,7 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { ShieldCheck, Lock, Mail, ArrowRight, AlertCircle } from 'lucide-react';
 
 export default function LoginPage() {
@@ -177,7 +178,18 @@ export default function LoginPage() {
           </button>
         </form>
 
-        <div className="text-center pt-2 border-t border-border">
+        {/* Registration Navigation Link */}
+        <div className="pt-3 border-t border-border flex items-center justify-between text-xs">
+          <span className="text-muted-foreground">New practitioner?</span>
+          <Link
+            href="/register"
+            className="font-semibold text-blue-500 hover:text-blue-400 hover:underline flex items-center gap-1"
+          >
+            Create Free Account →
+          </Link>
+        </div>
+
+        <div className="text-center pt-2">
           <p className="text-[11px] text-muted-foreground">
             Sovereign Legal Chambers · Neon Serverless DB · Vercel Edge
           </p>

@@ -2,6 +2,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { 
   KeyRound, 
   Copy, 
@@ -16,13 +17,17 @@ import {
   DownloadCloud,
   CheckCircle2,
   Clock,
-  ShieldCheck
+  ShieldCheck,
+  Sparkles
 } from 'lucide-react';
 import { License, Activation } from '@/lib/db/schema';
 import { DeactivateModal } from '@/components/client/deactivate-modal';
 import { cn } from '@/lib/utils';
 
-export default function LicensesPage() {
+function LicensesContent() {
+  const searchParams = useSearchParams();
+  const isNewRegistration = searchParams?.get('new_registration') === 'true';
+
   const [license, setLicense] = useState<License | null>(null);
   const [activations, setActivations] = useState<Activation[]>([]);
   const [activeCount, setActiveCount] = useState(0);
@@ -84,6 +89,23 @@ export default function LicensesPage() {
 
   return (
     <div className="space-y-6 pb-12">
+      {/* Welcome Banner for Newly Registered Practitioners */}
+      {isNewRegistration && (
+        <div className="p-4 rounded-xl bg-gradient-to-r from-blue-600/15 via-indigo-600/15 to-purple-600/15 border border-blue-500/30 flex items-start gap-3.5 shadow-md animate-in fade-in duration-300">
+          <div className="p-2 rounded-lg bg-blue-600 text-white shadow-sm mt-0.5">
+            <Sparkles className="w-5 h-5" />
+          </div>
+          <div className="space-y-1 text-xs">
+            <h3 className="text-sm font-bold text-foreground flex items-center gap-1.5">
+              <span>🎉 Welcome to Hayagriva! Your Starter License is Ready</span>
+            </h3>
+            <p className="text-muted-foreground leading-relaxed">
+              Your 1-device Starter License Key has been automatically generated below. Download the sovereign desktop installer for your operating system and paste your key during initial startup.
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
@@ -305,5 +327,13 @@ export default function LicensesPage() {
         onConfirm={handleDeactivate}
       />
     </div>
+  );
+}
+
+export default function LicensesPage() {
+  return (
+    <React.Suspense fallback={<div className="p-8 text-xs text-muted-foreground">Loading license details...</div>}>
+      <LicensesContent />
+    </React.Suspense>
   );
 }

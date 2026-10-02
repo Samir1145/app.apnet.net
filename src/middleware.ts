@@ -15,11 +15,27 @@ export function middleware(request: NextRequest) {
     // Check auth cookie / header
     const token = request.cookies.get('hayagriva_admin_token')?.value;
     const sessionUserStr = request.cookies.get('hayagriva_user')?.value;
+    const sessionJwt = request.cookies.get('hayagriva_session')?.value;
 
-    let user = null;
+    let user: any = null;
     if (sessionUserStr) {
       try {
         user = JSON.parse(decodeURIComponent(sessionUserStr));
+      } catch {
+        user = null;
+      }
+    } else if (sessionJwt) {
+      try {
+        const [b64] = sessionJwt.split('.');
+        const payload = JSON.parse(Buffer.from(b64, 'base64url').toString('utf8'));
+        user = {
+          id: payload.userId,
+          name: payload.name || 'Practitioner',
+          email: payload.email,
+          role: payload.role || 'ADVOCATE',
+          status: 'ACTIVE',
+          plan: payload.plan || 'STARTER',
+        };
       } catch {
         user = null;
       }
