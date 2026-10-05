@@ -40,7 +40,7 @@ async function testDatabaseLayer() {
     
     // Perform soft-delete
     targetUser.isDeleted = true;
-    targetUser.deletedAt = new Date().toISOString();
+    targetUser.deletedAt = new Date();
     targetUser.deletedBy = superAdmin.id;
 
     assert.strictEqual(targetUser.isDeleted, true, 'User must be marked isDeleted = true');

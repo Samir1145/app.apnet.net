@@ -136,3 +136,43 @@ export type License = typeof licenses.$inferSelect;
 export type Activation = typeof activations.$inferSelect;
 export type ApiKey = typeof apiKeys.$inferSelect;
 
+
+
+// 10. Custom Sovereign Agents Table
+export const customAgents = pgTable("custom_agents", {
+  id: text("id").primaryKey(), // agt_xxxx
+  userId: text("user_id").notNull(),
+  slug: varchar("slug", { length: 100 }).notNull(),
+  name: varchar("name", { length: 255 }).notNull(),
+  description: text("description"),
+  archetype: varchar("archetype", { length: 50 }).notNull(), // avoidance_auditor, commercial_pleading, claim_adjudicator, sec29a_inquest, custom_chamber
+  version: varchar("version", { length: 20 }).default("1.0.0").notNull(),
+  systemPrompt: text("system_prompt").notNull(),
+  reasoningEffort: varchar("reasoning_effort", { length: 20 }).default("medium").notNull(),
+  allowSubagents: boolean("allow_subagents").default(true).notNull(),
+  criticAgent: varchar("critic_agent", { length: 50 }),
+  statutoryVaults: jsonb("statutory_vaults").notNull(), // ["ibc_2016", "cirp_regs"]
+  slashTriggers: jsonb("slash_triggers").notNull(), // [{"trigger": "/avoidance", "label": "..."}]
+  medallionColor: varchar("medallion_color", { length: 20 }).default("#f59e0b").notNull(),
+  cartridgeUrl: text("cartridge_url"),
+  cartridgeHash: varchar("cartridge_hash", { length: 64 }),
+  downloadsCount: integer("downloads_count").default(0).notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+// 11. Asset Downloads Telemetry Table
+export const assetDownloads = pgTable("asset_downloads", {
+  id: serial("id").primaryKey(),
+  userId: text("user_id").notNull(),
+  assetType: varchar("asset_type", { length: 50 }).notNull(), // HARNESS_BINARY, BARE_ACT_VAULT, AI_MODEL, AGENT_CARTRIDGE
+  assetKey: varchar("asset_key", { length: 100 }).notNull(), // e.g. "harness-mac-arm64", "bare_ibc.vault", "agent-avoidance"
+  fileSizeBytes: numeric("file_size_bytes"),
+  ipAddress: varchar("ip_address", { length: 45 }).notNull(),
+  downloadedAt: timestamp("downloaded_at").defaultNow().notNull(),
+});
+
+export type CustomAgent = typeof customAgents.$inferSelect;
+export type NewCustomAgent = typeof customAgents.$inferInsert;
+export type AssetDownload = typeof assetDownloads.$inferSelect;
+export type NewAssetDownload = typeof assetDownloads.$inferInsert;

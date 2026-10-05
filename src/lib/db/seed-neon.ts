@@ -4,11 +4,14 @@ import { drizzle } from 'drizzle-orm/neon-http';
 import * as schema from './schema';
 import { seedInitialData } from './seed';
 
-const DATABASE_URL = process.env.DATABASE_URL || "postgresql://neondb_owner:npg_CSsMra5tIy7v@ep-hidden-haze-b5rz7853-pooler.c-7.us-east-2.aws.neon.tech/neondb?sslmode=require";
+const DATABASE_URL = process.env.DATABASE_URL;
+if (!DATABASE_URL) {
+  throw new Error('DATABASE_URL environment variable is required. Please set it in .env.local');
+}
 
 async function main() {
   console.log('Connecting to Neon PostgreSQL database...');
-  const sql = neon(DATABASE_URL);
+  const sql = neon(DATABASE_URL || "");
   const db = drizzle(sql, { schema });
 
   const seedData = seedInitialData();
