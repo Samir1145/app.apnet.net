@@ -14,7 +14,13 @@ import {
   Plus,
   RefreshCw,
   Server,
-  Zap
+  Zap,
+  Bot,
+  Scale,
+  Cpu,
+  Monitor,
+  CheckCircle2,
+  ChevronRight
 } from 'lucide-react';
 import { MetricsCard } from '@/components/admin/metrics-card';
 import { RevenueChart } from '@/components/admin/revenue-chart';
@@ -45,7 +51,7 @@ export default function DashboardPage() {
   }, []);
 
   return (
-    <div className="space-y-6 pb-12">
+    <div className="space-y-6 pb-12 animate-fadeIn">
       {/* Top Banner / Breadcrumb & Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
@@ -57,7 +63,7 @@ export default function DashboardPage() {
             </span>
           </div>
           <p className="text-xs text-muted-foreground mt-0.5">
-            Cross-platform desktop distribution, billing revenue, and serverless API health.
+            Cross-platform desktop distribution, billing revenue, bare act vaults, and agent cartridge moderation.
           </p>
         </div>
 
@@ -73,7 +79,7 @@ export default function DashboardPage() {
           </button>
           <Link
             href="/admin/users"
-            className="px-3 py-1.5 text-xs font-semibold bg-primary text-primary-foreground hover:bg-primary/90 rounded-md shadow-sm shadow-primary/20 flex items-center gap-1.5 transition-all"
+            className="px-3 py-1.5 text-xs font-semibold bg-amber-500 text-slate-950 hover:bg-amber-600 rounded-md shadow-sm shadow-amber-500/20 flex items-center gap-1.5 transition-all"
           >
             <Users className="w-3.5 h-3.5" />
             <span>Manage Users</span>
@@ -81,7 +87,7 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* 4 Stat Cards */}
+      {/* 4 Primary Financial & Infrastructure Stat Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <MetricsCard
           title="Total Downloads"
@@ -118,6 +124,103 @@ export default function DashboardPage() {
           trend={{ value: 'Optimal', isPositive: true }}
           highlightColor="purple"
         />
+      </div>
+
+      {/* Sovereign Asset & Agent Inventory Governance Row */}
+      <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <h2 className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
+            <ShieldAlert className="w-3.5 h-3.5 text-amber-500" />
+            Sovereign Asset & In-Chamber Agent Governance
+          </h2>
+          <span className="text-[11px] text-muted-foreground font-mono">Real-Time Registry</span>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {/* Agent Cartridges */}
+          <Link 
+            href="/admin/agents"
+            className="p-4 rounded-xl bg-card border border-border hover:border-amber-500/40 transition-all group shadow-sm flex flex-col justify-between"
+          >
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs font-semibold text-muted-foreground uppercase">Agent Cartridges</span>
+                <div className="w-7 h-7 rounded-lg bg-amber-500/15 text-amber-500 flex items-center justify-center">
+                  <Bot className="w-4 h-4" />
+                </div>
+              </div>
+              <div className="text-2xl font-bold text-foreground">5 Packages</div>
+              <div className="text-xs text-muted-foreground mt-1">4 Official · 1 Under Review</div>
+            </div>
+            <div className="pt-3 border-t border-border/50 mt-3 flex items-center justify-between text-xs text-amber-500 font-medium">
+              <span>Moderate Foundry</span>
+              <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+            </div>
+          </Link>
+
+          {/* Bare Act Vaults */}
+          <Link 
+            href="/admin/vaults"
+            className="p-4 rounded-xl bg-card border border-border hover:border-amber-500/40 transition-all group shadow-sm flex flex-col justify-between"
+          >
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs font-semibold text-muted-foreground uppercase">Chamber Vaults</span>
+                <div className="w-7 h-7 rounded-lg bg-blue-500/15 text-blue-400 flex items-center justify-center">
+                  <Scale className="w-4 h-4" />
+                </div>
+              </div>
+              <div className="text-2xl font-bold text-foreground">8 Statutes</div>
+              <div className="text-xs text-muted-foreground mt-1">1,840 Sections · AES-256</div>
+            </div>
+            <div className="pt-3 border-t border-border/50 mt-3 flex items-center justify-between text-xs text-blue-400 font-medium">
+              <span>Manage Law Vaults</span>
+              <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+            </div>
+          </Link>
+
+          {/* AI Models Registry */}
+          <Link 
+            href="/admin/models"
+            className="p-4 rounded-xl bg-card border border-border hover:border-amber-500/40 transition-all group shadow-sm flex flex-col justify-between"
+          >
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs font-semibold text-muted-foreground uppercase">AI Reasoning Engines</span>
+                <div className="w-7 h-7 rounded-lg bg-emerald-500/15 text-emerald-400 flex items-center justify-center">
+                  <Cpu className="w-4 h-4" />
+                </div>
+              </div>
+              <div className="text-2xl font-bold text-foreground">3 Engines</div>
+              <div className="text-xs text-muted-foreground mt-1">DeepSeek, Llama, BGE-ONNX</div>
+            </div>
+            <div className="pt-3 border-t border-border/50 mt-3 flex items-center justify-between text-xs text-emerald-400 font-medium">
+              <span>Inspect Models</span>
+              <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+            </div>
+          </Link>
+
+          {/* Desktop Harness Rollout */}
+          <Link 
+            href="/admin/harness"
+            className="p-4 rounded-xl bg-card border border-border hover:border-amber-500/40 transition-all group shadow-sm flex flex-col justify-between"
+          >
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs font-semibold text-muted-foreground uppercase">Harness Rollout</span>
+                <div className="w-7 h-7 rounded-lg bg-purple-500/15 text-purple-400 flex items-center justify-center">
+                  <Monitor className="w-4 h-4" />
+                </div>
+              </div>
+              <div className="text-2xl font-bold text-foreground">v1.2.0 Active</div>
+              <div className="text-xs text-muted-foreground mt-1">4 Binaries Built & Signed</div>
+            </div>
+            <div className="pt-3 border-t border-border/50 mt-3 flex items-center justify-between text-xs text-purple-400 font-medium">
+              <span>View Releases</span>
+              <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+            </div>
+          </Link>
+        </div>
       </div>
 
       {/* Main Charts & Telemetry Grid */}
@@ -211,7 +314,7 @@ export default function DashboardPage() {
           </div>
           <Link
             href="/admin/logs"
-            className="text-xs font-semibold text-primary hover:underline flex items-center gap-1"
+            className="text-xs font-semibold text-amber-500 hover:underline flex items-center gap-1"
           >
             <span>View All Logs</span>
             <ArrowUpRight className="w-3.5 h-3.5" />
