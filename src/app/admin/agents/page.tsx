@@ -681,7 +681,7 @@ export default function AdminAgentsDirectoryPage() {
                           className="px-2.5 py-1.5 rounded-lg bg-muted hover:bg-muted/80 text-foreground text-xs font-semibold flex items-center gap-1 transition-all border border-border"
                         >
                           <Eye className="w-3 h-3 text-blue-400" />
-                          <span>Inspect</span>
+                          <span>Inspect Manifest</span>
                         </button>
 
                         <button
@@ -693,7 +693,7 @@ export default function AdminAgentsDirectoryPage() {
                           }`}
                         >
                           <Award className="w-3 h-3" />
-                          <span>{agent.status === 'Official' ? 'Demote' : 'Promote'}</span>
+                          <span>{agent.status === 'Official' ? 'Demote to Community' : 'Promote to Official Template'}</span>
                         </button>
                       </div>
                     </td>
