@@ -422,6 +422,8 @@ export function seedInitialData(): AdminStore {
       description: 'Need assistance importing a custom Customs Act 1962 cartridge into the VMS Vault catalog.',
       priority: 'HIGH',
       status: 'IN_PROGRESS',
+      adminResponse: 'Engineering has verified the XML schema. Preparing the AES-256 encrypted VMS cartridge package for deployment.',
+      respondedAt: new Date('2026-10-02T14:30:00Z'),
       createdAt: new Date('2026-10-02T10:00:00Z'),
       updatedAt: new Date('2026-10-02T14:30:00Z')
     },
@@ -434,6 +436,8 @@ export function seedInitialData(): AdminStore {
       description: 'Requesting DOCX export styling alignment for NCLAT Principal Bench formatting guidelines.',
       priority: 'MEDIUM',
       status: 'OPEN',
+      adminResponse: null,
+      respondedAt: null,
       createdAt: new Date('2026-10-02T12:15:00Z'),
       updatedAt: new Date('2026-10-02T12:15:00Z')
     },
@@ -446,6 +450,8 @@ export function seedInitialData(): AdminStore {
       description: 'Submitted payment via NEFT, kindly re-enable the desktop IDE estate accounting module.',
       priority: 'URGENT',
       status: 'OPEN',
+      adminResponse: null,
+      respondedAt: null,
       createdAt: new Date('2026-10-02T15:00:00Z'),
       updatedAt: new Date('2026-10-02T15:00:00Z')
     },
@@ -458,6 +464,8 @@ export function seedInitialData(): AdminStore {
       description: 'Need credentials for the internal finance team to inspect creditor claim verification tables.',
       priority: 'LOW',
       status: 'RESOLVED',
+      adminResponse: 'Read-only access granted for the 2 requested accounts. Invitation emails dispatched.',
+      respondedAt: new Date('2026-09-29T16:00:00Z'),
       createdAt: new Date('2026-09-28T09:00:00Z'),
       updatedAt: new Date('2026-09-29T16:00:00Z')
     }

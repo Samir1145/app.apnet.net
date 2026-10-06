@@ -4,21 +4,64 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { 
-  KeyRound, 
-  Activity, 
-  CreditCard, 
-  Zap, 
   DownloadCloud, 
   ArrowUpRight, 
   CheckCircle2, 
   Clock, 
-  RefreshCw,
   Laptop,
-  Shield,
-  FileText
+  Database,
+  Cpu,
+  Bot
 } from 'lucide-react';
 import { ClientOverviewData } from '@/lib/services/client_overview';
 import { cn } from '@/lib/utils';
+
+interface DeviceSeat {
+  id: string;
+  deviceName: string;
+  osInfo: string;
+  fingerprint: string;
+  ipAddress: string;
+  lastPing: string;
+  status: 'ACTIVE' | 'IDLE';
+}
+
+const mockDevices: DeviceSeat[] = [
+  {
+    id: 'act_001',
+    deviceName: "Atul's MacBook Pro (Chamber Silicon)",
+    osInfo: 'macOS 15.1 (ARM64 Apple M3 Pro)',
+    fingerprint: 'fp_m3p_9981a_b2c4',
+    ipAddress: '192.168.1.45 (Local Chamber)',
+    lastPing: '2 minutes ago',
+    status: 'ACTIVE',
+  },
+  {
+    id: 'act_002',
+    deviceName: "Courtroom ThinkPad X1",
+    osInfo: 'Windows 11 Pro 64-bit',
+    fingerprint: 'fp_win11_x1c_3391',
+    ipAddress: '10.0.4.12 (Courtroom Wi-Fi)',
+    lastPing: 'Yesterday at 17:40',
+    status: 'ACTIVE',
+  },
+];
+
+const mockVaults = [
+  { id: 'bare_ibc.vault', name: 'IBC 2016 Bare Act Vault', size: '4.8 MB', memory: '~81 KB in-RAM', verified: true },
+  { id: 'commercial_courts.vault', name: 'Commercial Courts Act 2015', size: '1.6 MB', memory: '~32 KB in-RAM', verified: true },
+  { id: 'cirp_regs.vault', name: 'IBBI CIRP Regulations 2016', size: '2.1 MB', memory: '~45 KB in-RAM', verified: true },
+];
+
+const mockModels = [
+  { id: 'deepseek-r1-7b', name: 'DeepSeek-R1-Distill-Qwen-7B (GGUF Q4_K_M)', size: '4.68 GB', location: '~/.hayagriva/models/' },
+  { id: 'bge-small-onnx', name: 'BGE-Small-EN-v1.5 Dense Embeddings', size: '133 MB', location: '~/.hayagriva/models/' },
+];
+
+const mockAgents = [
+  { id: 'agt_001', name: 'Section 43 Avoidance Auditor', archetype: 'avoidance_auditor', version: 'v1.0.0', compiled: 'Today at 22:30', file: 'avoidance-inquest-v1.0.0.haya' },
+  { id: 'agt_002', name: 'Commercial Injunction Drafter', archetype: 'commercial_pleading', version: 'v1.1.0', compiled: 'Yesterday', file: 'commercial-pleading-v1.1.0.haya' },
+];
 
 export default function ClientDashboardPage() {
   const [data, setData] = useState<ClientOverviewData | null>(null);
@@ -45,218 +88,138 @@ export default function ClientDashboardPage() {
 
   return (
     <div className="space-y-6 pb-12">
-      {/* Top Welcome Banner */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-card border border-border p-6 rounded-2xl shadow-sm">
-        <div className="space-y-1">
-          <div className="flex items-center gap-2.5">
-            <h1 className="text-xl font-bold tracking-tight text-foreground">
-              Welcome, {data ? data.user.name : 'Practitioner'}
-            </h1>
-            <span className="text-[10px] bg-blue-500/10 text-blue-500 font-bold px-2 py-0.5 rounded-full border border-blue-500/20 font-mono">
-              {data ? data.user.plan : 'ENTERPRISE'}
-            </span>
-          </div>
-          <p className="text-xs text-muted-foreground">
-            {data?.user.org || 'Rao & Partners Insolvency Advocates'} · Connected to Sovereign Legal Cloud
-          </p>
-        </div>
-
-        <div className="flex items-center space-x-2.5">
-          <Link
-            href="/dashboard/licenses"
-            className="px-3.5 py-2 text-xs font-semibold bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg shadow-sm shadow-primary/20 flex items-center gap-1.5 transition-all"
-          >
-            <DownloadCloud className="w-3.5 h-3.5" />
-            <span>Download Desktop IDE</span>
-          </Link>
-          <button
-            onClick={fetchOverview}
-            disabled={loading}
-            className="p-2 rounded-lg bg-secondary text-secondary-foreground hover:bg-secondary/80 border border-border transition-colors"
-            title="Refresh dashboard"
-          >
-            <RefreshCw className={cn("w-4 h-4", loading ? "animate-spin" : "")} />
-          </button>
-        </div>
-      </div>
-
-      {/* 4 Stat / Quota Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* Card 1: License & Device Capacity */}
-        <div className="bg-card border border-border p-4 rounded-xl shadow-sm space-y-3">
+      {/* Sovereign Chamber Inventory Section */}
+      <div className="space-y-6">
+        {/* Section 1: Hardware Seats */}
+        <div className="p-6 rounded-xl border border-border bg-card space-y-4 shadow-sm">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Device Slots</span>
-            <div className="p-2 rounded-lg bg-blue-500/10 text-blue-500 border border-blue-500/20">
-              <Laptop className="w-4 h-4" />
-            </div>
+            <h2 className="text-base font-semibold text-foreground flex items-center gap-2">
+              <Laptop className="w-4 h-4 text-amber-500" />
+              Active Hardware Seats & Devices
+              <span className="text-xs font-normal text-muted-foreground">
+                ({data?.license ? `${data.license.activeDevices} / ${data.license.maxDevices}` : '2 / 3'} Seats Activated)
+              </span>
+            </h2>
+            <Link href="/dashboard/licenses" className="text-xs text-amber-500 hover:underline flex items-center gap-1">
+              Manage Seats <ArrowUpRight className="w-3.5 h-3.5" />
+            </Link>
           </div>
-          <div>
-            <div className="text-2xl font-bold text-foreground">
-              {data?.license ? `${data.license.activeDevices} / ${data.license.maxDevices}` : '2 / 10'}
-            </div>
-            <p className="text-[11px] text-muted-foreground">Active Workstations & Laptops</p>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {mockDevices.map((dev) => (
+              <div key={dev.id} className="p-4 rounded-lg bg-secondary/40 border border-border/80 space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-semibold text-foreground">{dev.deviceName}</span>
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-500">
+                    {dev.status}
+                  </span>
+                </div>
+                <div className="text-xs text-muted-foreground space-y-1">
+                  <p>{dev.osInfo}</p>
+                  <p className="font-mono text-[11px]">Fingerprint: {dev.fingerprint}</p>
+                  <p className="flex items-center gap-1 text-[11px]">
+                    <Clock className="w-3 h-3 text-muted-foreground" /> Last active: {dev.lastPing}
+                  </p>
+                </div>
+              </div>
+            ))}
           </div>
-          <div className="w-full bg-secondary h-1.5 rounded-full overflow-hidden">
-            <div 
-              className="bg-blue-500 h-full rounded-full transition-all"
-              style={{ width: `${((data?.license?.activeDevices || 2) / (data?.license?.maxDevices || 10)) * 100}%` }}
-            />
-          </div>
-          <Link
-            href="/dashboard/licenses"
-            className="text-[11px] font-semibold text-primary hover:underline flex items-center gap-1 pt-1"
-          >
-            <span>Manage Hardware Slots</span>
-            <ArrowUpRight className="w-3 h-3" />
-          </Link>
         </div>
 
-        {/* Card 2: API & MCP Usage Meter */}
-        <div className="bg-card border border-border p-4 rounded-xl shadow-sm space-y-3">
+        {/* Section 2: Statutory Vault Cartridges */}
+        <div className="p-6 rounded-xl border border-border bg-card space-y-4 shadow-sm">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">API & MCP Quota</span>
-            <div className="p-2 rounded-lg bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">
-              <Activity className="w-4 h-4" />
-            </div>
+            <h2 className="text-base font-semibold text-foreground flex items-center gap-2">
+              <Database className="w-4 h-4 text-amber-500" />
+              Chamber Statutory Vault Cartridges
+              <span className="text-xs font-normal text-muted-foreground">({mockVaults.length} Cartridges Chambered)</span>
+            </h2>
+            <Link href="/dashboard/vaults" className="text-xs text-amber-500 hover:underline flex items-center gap-1">
+              Browse Vaults Catalog <ArrowUpRight className="w-3.5 h-3.5" />
+            </Link>
           </div>
-          <div>
-            <div className="text-2xl font-bold text-foreground">
-              {data ? `${(data.apiUsage.requestsUsed / 1000).toFixed(1)}k` : '18.4k'}
-              <span className="text-xs font-normal text-muted-foreground ml-1">/ 500k reqs</span>
-            </div>
-            <p className="text-[11px] text-muted-foreground">Monthly Ingestion & Agent Calls</p>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {mockVaults.map((vault) => (
+              <div key={vault.id} className="p-4 rounded-lg bg-secondary/40 border border-border/80 space-y-2">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <h3 className="text-sm font-semibold text-foreground">{vault.name}</h3>
+                    <span className="text-xs font-mono text-muted-foreground">{vault.id}</span>
+                  </div>
+                  <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
+                </div>
+                <div className="pt-2 border-t border-border/60 flex items-center justify-between text-xs">
+                  <span className="text-muted-foreground">{vault.size}</span>
+                  <span className="text-amber-500 font-mono text-[11px]">{vault.memory}</span>
+                </div>
+              </div>
+            ))}
           </div>
-          <div className="w-full bg-secondary h-1.5 rounded-full overflow-hidden">
-            <div 
-              className="bg-emerald-500 h-full rounded-full transition-all"
-              style={{ width: `${data?.apiUsage.usagePercent || 3.7}%` }}
-            />
-          </div>
-          <Link
-            href="/dashboard/logs"
-            className="text-[11px] font-semibold text-emerald-500 hover:underline flex items-center gap-1 pt-1"
-          >
-            <span>View Consumption Logs</span>
-            <ArrowUpRight className="w-3 h-3" />
-          </Link>
         </div>
 
-        {/* Card 3: Subscription & Billing */}
-        <div className="bg-card border border-border p-4 rounded-xl shadow-sm space-y-3">
+        {/* Section 3: AI Models */}
+        <div className="p-6 rounded-xl border border-border bg-card space-y-4 shadow-sm">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Subscription</span>
-            <div className="p-2 rounded-lg bg-amber-500/10 text-amber-500 border border-amber-500/20">
-              <CreditCard className="w-4 h-4" />
-            </div>
+            <h2 className="text-base font-semibold text-foreground flex items-center gap-2">
+              <Cpu className="w-4 h-4 text-amber-500" />
+              Installed Local AI Models
+            </h2>
+            <Link href="/dashboard/models" className="text-xs text-amber-500 hover:underline flex items-center gap-1">
+              AI Models Hub <ArrowUpRight className="w-3.5 h-3.5" />
+            </Link>
           </div>
-          <div>
-            <div className="text-2xl font-bold text-foreground">
-              ₹{Number(data?.billing.amountInr || 49999).toLocaleString('en-IN')}
-            </div>
-            <p className="text-[11px] text-muted-foreground">Annual Renewal: {data?.billing.nextBillingDate || '01/09/2027'}</p>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {mockModels.map((model) => (
+              <div key={model.id} className="p-4 rounded-lg bg-secondary/40 border border-border/80 flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <h3 className="text-sm font-semibold text-foreground">{model.name}</h3>
+                  <p className="text-xs font-mono text-muted-foreground">{model.location}</p>
+                </div>
+                <span className="text-xs font-mono font-bold text-foreground bg-secondary px-2 py-1 rounded">
+                  {model.size}
+                </span>
+              </div>
+            ))}
           </div>
-          <div className="flex items-center gap-1.5 text-xs text-emerald-500 font-semibold">
-            <CheckCircle2 className="w-3.5 h-3.5" />
-            <span>Active Subscription</span>
-          </div>
-          <Link
-            href="/dashboard/billing"
-            className="text-[11px] font-semibold text-amber-500 hover:underline flex items-center gap-1 pt-1"
-          >
-            <span>Invoices & Payment</span>
-            <ArrowUpRight className="w-3 h-3" />
-          </Link>
         </div>
 
-        {/* Card 4: MCP Cloud Agent Bridge */}
-        <div className="bg-card border border-border p-4 rounded-xl shadow-sm space-y-3">
+        {/* Section 4: Sovereign Agent Packages */}
+        <div className="p-6 rounded-xl border border-border bg-card space-y-4 shadow-sm">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">MCP Cloud Keys</span>
-            <div className="p-2 rounded-lg bg-purple-500/10 text-purple-500 border border-purple-500/20">
-              <Zap className="w-4 h-4" />
-            </div>
+            <h2 className="text-base font-semibold text-foreground flex items-center gap-2">
+              <Bot className="w-4 h-4 text-amber-500" />
+              Custom Sovereign Agent Packages (.haya)
+              <span className="text-xs font-normal text-muted-foreground">({mockAgents.length} Packages Active)</span>
+            </h2>
+            <Link href="/dashboard/agents" className="text-xs text-amber-500 hover:underline flex items-center gap-1">
+              Manage in Agent Foundry <ArrowUpRight className="w-3.5 h-3.5" />
+            </Link>
           </div>
-          <div>
-            <div className="text-2xl font-bold text-foreground">
-              {data?.apiUsage.activeMcpKeysCount || 1} Active
-            </div>
-            <p className="text-[11px] text-muted-foreground">MacBook Pro Agent Bridge</p>
-          </div>
-          <div className="flex items-center gap-1.5 text-xs text-purple-500 font-semibold">
-            <span className="w-2 h-2 rounded-full bg-purple-500 animate-pulse"></span>
-            <span>Agent Gateway Online</span>
-          </div>
-          <Link
-            href="/dashboard/profile"
-            className="text-[11px] font-semibold text-purple-500 hover:underline flex items-center gap-1 pt-1"
-          >
-            <span>Manage MCP Keys</span>
-            <ArrowUpRight className="w-3 h-3" />
-          </Link>
-        </div>
-      </div>
 
-      {/* Recent API & Agent Activity Table */}
-      <div className="bg-card border border-border rounded-xl p-5 shadow-sm space-y-3">
-        <div className="flex items-center justify-between pb-2 border-b border-border">
-          <div>
-            <h2 className="text-sm font-bold text-foreground">Recent Agent & Workspace Activity</h2>
-            <p className="text-[11px] text-muted-foreground">Invocations generated from your authenticated desktop IDE sessions</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {mockAgents.map((agt) => (
+              <div key={agt.id} className="p-4 rounded-lg bg-secondary/40 border border-border/80 flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-sm font-semibold text-foreground">{agt.name}</h3>
+                    <span className="text-[10px] font-bold font-mono px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-500">
+                      {agt.version}
+                    </span>
+                  </div>
+                  <p className="text-xs text-muted-foreground font-mono">{agt.file} • {agt.compiled}</p>
+                </div>
+                <button
+                  onClick={() => alert(`Downloading ${agt.file} for Chamber Docking`)}
+                  className="px-3 py-1.5 rounded-lg bg-secondary hover:bg-secondary/80 text-foreground text-xs font-medium flex items-center gap-1.5 border border-border transition-colors cursor-pointer"
+                >
+                  <DownloadCloud className="w-3.5 h-3.5 text-amber-500" />
+                  <span>Download</span>
+                </button>
+              </div>
+            ))}
           </div>
-          <Link
-            href="/dashboard/logs"
-            className="text-xs font-semibold text-primary hover:underline flex items-center gap-1"
-          >
-            <span>View All Logs</span>
-            <ArrowUpRight className="w-3.5 h-3.5" />
-          </Link>
-        </div>
-
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
-            <thead>
-              <tr className="border-b border-border bg-secondary/30">
-                <th className="px-4 py-2.5 text-xs font-semibold text-muted-foreground uppercase">Timestamp</th>
-                <th className="px-4 py-2.5 text-xs font-semibold text-muted-foreground uppercase">Method</th>
-                <th className="px-4 py-2.5 text-xs font-semibold text-muted-foreground uppercase">Endpoint</th>
-                <th className="px-4 py-2.5 text-xs font-semibold text-muted-foreground uppercase">Status</th>
-                <th className="px-4 py-2.5 text-xs font-semibold text-muted-foreground uppercase">Latency</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border">
-              {data && data.recentLogs.length > 0 ? (
-                data.recentLogs.map((log) => (
-                  <tr key={log.id} className="hover:bg-secondary/20 transition-colors">
-                    <td className="px-4 py-2.5 text-[11px] font-mono text-muted-foreground">
-                      {new Date(log.createdAt).toLocaleTimeString()}
-                    </td>
-                    <td className="px-4 py-2.5">
-                      <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-blue-500/10 text-blue-500 border border-blue-500/20">
-                        {log.method}
-                      </span>
-                    </td>
-                    <td className="px-4 py-2.5 font-mono text-xs font-semibold text-foreground">
-                      {log.endpoint}
-                    </td>
-                    <td className="px-4 py-2.5">
-                      <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">
-                        {log.statusCode}
-                      </span>
-                    </td>
-                    <td className="px-4 py-2.5 text-xs font-mono text-muted-foreground">
-                      {log.responseTimeMs}ms
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan={5} className="px-4 py-6 text-center text-xs text-muted-foreground">
-                    No recent API activity logged in this session.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
         </div>
       </div>
     </div>

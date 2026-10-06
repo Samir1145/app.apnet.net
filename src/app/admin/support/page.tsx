@@ -4,6 +4,7 @@
 import React, { useEffect, useState } from 'react';
 import { HelpCircle, Search, RefreshCw, MessageSquare, AlertCircle, CheckCircle2, Clock } from 'lucide-react';
 import { SupportTicket } from '@/lib/db/schema';
+import { TicketResolutionModal } from '@/components/admin/ticket-resolution-modal';
 import { cn } from '@/lib/utils';
 
 export default function SupportPage() {
@@ -12,6 +13,8 @@ export default function SupportPage() {
   const [search, setSearch] = useState('');
   const [status, setStatus] = useState('ALL');
   const [priority, setPriority] = useState('ALL');
+  const [selectedTicket, setSelectedTicket] = useState<SupportTicket | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const fetchTickets = async () => {
     setLoading(true);
@@ -150,6 +153,24 @@ export default function SupportPage() {
                 {t.description}
               </div>
 
+              {/* Official Response Callout if Present */}
+              {t.adminResponse && (
+                <div className="bg-amber-500/10 border border-amber-500/20 rounded-lg p-3 text-xs space-y-1.5">
+                  <div className="flex items-center justify-between text-amber-500 font-semibold text-[11px]">
+                    <span className="flex items-center gap-1.5">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-amber-500" />
+                      Hayagriva Operations Reply
+                    </span>
+                    {t.respondedAt && (
+                      <span className="text-[10px] font-mono text-muted-foreground">
+                        {new Date(t.respondedAt).toLocaleString()}
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-foreground/90 whitespace-pre-wrap leading-relaxed">{t.adminResponse}</p>
+                </div>
+              )}
+
               <div className="flex items-center justify-between text-xs pt-1">
                 <span className="text-[11px] text-muted-foreground flex items-center gap-1 font-mono">
                   <Clock className="w-3 h-3" />
@@ -157,10 +178,13 @@ export default function SupportPage() {
                 </span>
 
                 <button
-                  onClick={() => alert(`Replying to ticket ${t.id} for ${t.userName}`)}
-                  className="px-3 py-1 text-xs font-medium bg-primary text-primary-foreground hover:bg-primary/90 rounded shadow-sm flex items-center gap-1.5 transition-colors"
+                  onClick={() => {
+                    setSelectedTicket(t);
+                    setIsModalOpen(true);
+                  }}
+                  className="px-3 py-1.5 text-xs font-medium bg-primary text-primary-foreground hover:bg-primary/90 rounded-md shadow-sm flex items-center gap-1.5 transition-colors cursor-pointer"
                 >
-                  <MessageSquare className="w-3 h-3" />
+                  <MessageSquare className="w-3.5 h-3.5" />
                   <span>Reply / Update Status</span>
                 </button>
               </div>
@@ -168,6 +192,19 @@ export default function SupportPage() {
           );
         })}
       </div>
+
+      {/* Ticket Resolution / Reply Modal */}
+      <TicketResolutionModal
+        ticket={selectedTicket}
+        isOpen={isModalOpen}
+        onClose={() => {
+          setIsModalOpen(false);
+          setSelectedTicket(null);
+        }}
+        onSuccess={(updated) => {
+          setTickets((prev) => prev.map((item) => (item.id === updated.id ? updated : item)));
+        }}
+      />
     </div>
   );
 }

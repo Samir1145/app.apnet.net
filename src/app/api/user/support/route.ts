@@ -63,6 +63,8 @@ export async function POST(request: Request) {
       description: description || '',
       priority: priority || 'MEDIUM',
       status: 'OPEN',
+      adminResponse: null,
+      respondedAt: null,
       createdAt: new Date(),
       updatedAt: new Date(),
     };

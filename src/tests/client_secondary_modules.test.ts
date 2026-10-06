@@ -33,6 +33,8 @@ async function testClientSecondaryModules() {
     description: 'Need assistance adding automated Section 66 avoidance calculations into the form footer.',
     priority: 'HIGH',
     status: 'OPEN',
+    adminResponse: null,
+    respondedAt: null,
     createdAt: new Date(),
     updatedAt: new Date(),
   };

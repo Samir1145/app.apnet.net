@@ -7,7 +7,6 @@ import {
   DownloadCloud, 
   Check, 
   Copy, 
-  Terminal, 
   ShieldCheck, 
   Cpu, 
   HardDrive,
@@ -161,34 +160,6 @@ export default function HarnessDownloadPage() {
             </div>
           </div>
         ))}
-      </div>
-
-      {/* 3-Step Quick Start Installation Guide */}
-      <div className="p-6 rounded-xl border border-border bg-card space-y-4">
-        <h2 className="text-base font-semibold text-foreground flex items-center gap-2">
-          <Terminal className="w-4 h-4 text-amber-500" />
-          Quick Start & Activation
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
-          <div className="p-4 rounded-lg bg-secondary/40 border border-border space-y-2">
-            <span className="text-xs font-bold text-amber-500 font-mono">01. MOUNT & LAUNCH</span>
-            <p className="text-xs text-muted-foreground leading-relaxed">
-              Open the downloaded installer, move Hayagriva into Applications (or Program Files), and launch the app.
-            </p>
-          </div>
-          <div className="p-4 rounded-lg bg-secondary/40 border border-border space-y-2">
-            <span className="text-xs font-bold text-amber-500 font-mono">02. ACTIVATE LICENSE</span>
-            <p className="text-xs text-muted-foreground leading-relaxed">
-              Copy your license key from <strong>Licenses & Devices</strong> tab and paste it into the chamber activation prompt.
-            </p>
-          </div>
-          <div className="p-4 rounded-lg bg-secondary/40 border border-border space-y-2">
-            <span className="text-xs font-bold text-amber-500 font-mono">03. DOCK CARTRIDGES</span>
-            <p className="text-xs text-muted-foreground leading-relaxed">
-              Download bare act vaults from the <strong>Statutory Vaults</strong> hub and drop them into your local <code className="text-amber-400">~/.hayagriva/vaults/</code> directory.
-            </p>
-          </div>
-        </div>
       </div>
     </div>
   );

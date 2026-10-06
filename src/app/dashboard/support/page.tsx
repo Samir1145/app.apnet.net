@@ -105,12 +105,32 @@ export default function ClientSupportPage() {
                   {t.description}
                 </div>
 
+                {/* Official Operations / Engineering Response */}
+                {t.adminResponse && (
+                  <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-lg p-3 text-xs space-y-1.5">
+                    <div className="flex items-center justify-between text-emerald-600 dark:text-emerald-400 font-semibold text-[11px]">
+                      <span className="flex items-center gap-1.5">
+                        <CheckCircle2 className="w-3.5 h-3.5" />
+                        Hayagriva Support Team Response
+                      </span>
+                      {t.respondedAt && (
+                        <span className="text-[10px] font-mono text-muted-foreground">
+                          {new Date(t.respondedAt).toLocaleString()}
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-foreground/90 whitespace-pre-wrap leading-relaxed">{t.adminResponse}</p>
+                  </div>
+                )}
+
                 <div className="flex items-center justify-between text-xs pt-1 text-muted-foreground font-mono">
                   <span className="flex items-center gap-1 text-[11px]">
                     <Clock className="w-3 h-3" />
                     Filed: {t.createdAt ? new Date(t.createdAt).toLocaleString() : 'Recent'}
                   </span>
-                  <span className="text-[11px]">Chamber Response Time: ~2 hrs</span>
+                  <span className="text-[11px]">
+                    {t.status === 'RESOLVED' ? 'Status: Resolved & Dispatched' : 'Chamber Response Time: ~2 hrs'}
+                  </span>
                 </div>
               </div>
             );

@@ -12,9 +12,6 @@ import {
   Laptop, 
   PowerOff, 
   RefreshCw, 
-  Apple, 
-  Monitor, 
-  DownloadCloud,
   CheckCircle2,
   Clock,
   ShieldCheck,
@@ -267,55 +264,6 @@ function LicensesContent() {
               )}
             </tbody>
           </table>
-        </div>
-      </div>
-
-      {/* Desktop App Installer Downloads */}
-      <div className="bg-card border border-border rounded-xl p-5 shadow-sm space-y-3">
-        <div className="pb-2 border-b border-border">
-          <h2 className="text-sm font-bold text-foreground">Download Hayagriva Desktop IDE</h2>
-          <p className="text-[11px] text-muted-foreground">Available for macOS, Windows, and Linux with local bare act vaults</p>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
-          <button
-            onClick={() => alert('Downloading Hayagriva Desktop for macOS Apple Silicon (arm64)...')}
-            className="p-3 rounded-lg bg-secondary/50 hover:bg-secondary border border-border text-left space-y-1 transition-colors"
-          >
-            <div className="flex items-center justify-between">
-              <span className="font-bold text-xs text-foreground flex items-center gap-1.5">
-                <Apple className="w-4 h-4 text-amber-500" /> macOS (Apple Silicon)
-              </span>
-              <DownloadCloud className="w-3.5 h-3.5 text-muted-foreground" />
-            </div>
-            <p className="text-[10px] text-muted-foreground font-mono">harness-macos-arm64.dmg (v1.2.0)</p>
-          </button>
-
-          <button
-            onClick={() => alert('Downloading Hayagriva Desktop for Windows 10/11 (x64)...')}
-            className="p-3 rounded-lg bg-secondary/50 hover:bg-secondary border border-border text-left space-y-1 transition-colors"
-          >
-            <div className="flex items-center justify-between">
-              <span className="font-bold text-xs text-foreground flex items-center gap-1.5">
-                <Monitor className="w-4 h-4 text-blue-500" /> Windows 10 / 11
-              </span>
-              <DownloadCloud className="w-3.5 h-3.5 text-muted-foreground" />
-            </div>
-            <p className="text-[10px] text-muted-foreground font-mono">Hayagriva-Setup-x64.exe (v1.2.0)</p>
-          </button>
-
-          <button
-            onClick={() => alert('Downloading Hayagriva Desktop for macOS Intel (x64)...')}
-            className="p-3 rounded-lg bg-secondary/50 hover:bg-secondary border border-border text-left space-y-1 transition-colors"
-          >
-            <div className="flex items-center justify-between">
-              <span className="font-bold text-xs text-foreground flex items-center gap-1.5">
-                <Apple className="w-4 h-4 text-emerald-500" /> macOS (Intel x64)
-              </span>
-              <DownloadCloud className="w-3.5 h-3.5 text-muted-foreground" />
-            </div>
-            <p className="text-[10px] text-muted-foreground font-mono">harness-macos-x64.dmg (v1.2.0)</p>
-          </button>
         </div>
       </div>
 

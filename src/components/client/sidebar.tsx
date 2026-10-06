@@ -11,12 +11,9 @@ import {
   CreditCard, 
   HelpCircle,
   DownloadCloud,
-  Layers,
   Database,
   Cpu,
-  Bot,
-  Package,
-  Zap
+  Bot
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -51,7 +48,6 @@ const navSections: NavSection[] = [
     title: 'Agent Foundry',
     items: [
       { name: 'Agent Studio & Registry', href: '/dashboard/agents', icon: Bot },
-      { name: 'My Sovereign Inventory', href: '/dashboard/my-assets', icon: Package },
     ]
   },
   {
@@ -138,26 +134,6 @@ export function ClientSidebar() {
         ))}
       </div>
 
-      {/* Desktop App Download & MCP Agent Footer */}
-      <div className="p-3 border-t border-border bg-secondary/30 space-y-2.5 text-xs">
-        <div className="p-2 rounded-lg bg-card border border-border space-y-1.5">
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] font-bold text-foreground flex items-center gap-1.5">
-              <Zap className="w-3 h-3 text-amber-500" /> Sovereign Cartridges
-            </span>
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-          </div>
-          <p className="text-[10px] text-muted-foreground">Ready for Desktop Harness</p>
-        </div>
-
-        <Link
-          href="/dashboard/harness"
-          className="w-full py-1.5 px-2.5 rounded-md bg-secondary text-secondary-foreground hover:bg-secondary/80 border border-border flex items-center justify-center gap-1.5 text-[11px] font-semibold transition-colors"
-        >
-          <DownloadCloud className="w-3.5 h-3.5 text-amber-500" />
-          <span>Download Desktop IDE</span>
-        </Link>
-      </div>
     </aside>
   );
 }

@@ -67,6 +67,8 @@ export const supportTickets = pgTable("support_tickets", {
   description: text("description").notNull(),
   priority: varchar("priority", { length: 50 }).default("MEDIUM").notNull(), // LOW, MEDIUM, HIGH, URGENT
   status: varchar("status", { length: 50 }).default("OPEN").notNull(), // OPEN, IN_PROGRESS, RESOLVED, CLOSED
+  adminResponse: text("admin_response"),
+  respondedAt: timestamp("responded_at"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });

@@ -1,5 +1,6 @@
 // admin-panel/src/lib/services/modules.ts
 import { AdminStore } from '../db/seed';
+import { SupportTicket } from '../db/schema';
 
 export function filterLogs(store: AdminStore, options: { method?: string; errorOnly?: boolean; search?: string }) {
   let logs = [...store.systemLogs];
@@ -90,4 +91,46 @@ export function triageTickets(store: AdminStore, options: { status?: string; pri
   }
 
   return tickets;
+}
+
+export function updateTicket(
+  store: AdminStore,
+  ticketId: string,
+  updates: { status?: string; priority?: string; adminResponse?: string },
+  adminContext?: { adminId: string; adminEmail: string }
+) {
+  const index = store.supportTickets.findIndex(t => t.id === ticketId);
+  if (index === -1) {
+    return { success: false, error: 'Ticket not found' };
+  }
+
+  const current = store.supportTickets[index];
+  const previousState = { ...current };
+
+  const updatedTicket: SupportTicket = {
+    ...current,
+    status: updates.status || current.status,
+    priority: updates.priority || current.priority,
+    adminResponse: updates.adminResponse !== undefined ? updates.adminResponse : current.adminResponse,
+    respondedAt: updates.adminResponse ? new Date() : current.respondedAt,
+    updatedAt: new Date(),
+  };
+
+  store.supportTickets[index] = updatedTicket;
+
+  if (adminContext) {
+    store.adminAuditLogs.push({
+      id: store.adminAuditLogs.length + 1,
+      adminId: adminContext.adminId,
+      adminEmail: adminContext.adminEmail,
+      action: 'TICKET_STATUS_UPDATED',
+      targetUserId: current.userId,
+      previousState: { ticketId: current.id, status: previousState.status, priority: previousState.priority },
+      newState: { ticketId: updatedTicket.id, status: updatedTicket.status, priority: updatedTicket.priority, hasResponse: !!updatedTicket.adminResponse },
+      ipAddress: '127.0.0.1',
+      createdAt: new Date(),
+    });
+  }
+
+  return { success: true, ticket: updatedTicket };
 }

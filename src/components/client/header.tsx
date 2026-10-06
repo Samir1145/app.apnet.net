@@ -9,25 +9,76 @@ import {
   Moon, 
   Search, 
   HelpCircle, 
-  LogOut, 
-  User,
-  ShieldCheck,
-  Zap
+  LogOut 
 } from 'lucide-react';
+
+interface CurrentUser {
+  id?: string;
+  name: string;
+  email: string;
+  role?: string;
+  plan?: string;
+  org?: string;
+}
 
 export function ClientHeader() {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = React.useState(false);
+  const [currentUser, setCurrentUser] = React.useState<CurrentUser | null>(null);
 
   React.useEffect(() => {
     setMounted(true);
+
+    // 1. Parse session cookie immediately for zero-flicker render
+    try {
+      const match = document.cookie
+        .split('; ')
+        .find(row => row.startsWith('hayagriva_user='));
+      if (match) {
+        const val = match.split('=')[1];
+        const parsed = JSON.parse(decodeURIComponent(val));
+        if (parsed?.name) {
+          setCurrentUser(parsed);
+        }
+      }
+    } catch (e) {
+      console.error('Failed to parse hayagriva_user cookie', e);
+    }
+
+    // 2. Fetch fresh user profile from API
+    fetch('/api/user/profile')
+      .then(res => res.ok ? res.json() : null)
+      .then(data => {
+        if (data?.user) {
+          setCurrentUser(data.user);
+        }
+      })
+      .catch(() => {});
   }, []);
+
+  const getInitials = (fullName: string) => {
+    if (!fullName) return 'PR';
+    const clean = fullName
+      .replace(/^(Adv\.|Dr\.|Mr\.|Ms\.|Mrs\.)\s+/i, '')
+      .replace(/\([^)]*\)/g, '')
+      .trim();
+    const parts = clean.split(/\s+/).filter(Boolean);
+    if (parts.length >= 2) {
+      return `${parts[0][0]}${parts[parts.length - 1][0]}`.toUpperCase();
+    }
+    return (parts[0]?.substring(0, 2) || 'PR').toUpperCase();
+  };
 
   const handleLogout = () => {
     document.cookie = 'hayagriva_admin_token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
     document.cookie = 'hayagriva_user=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
     window.location.href = '/login';
   };
+
+  const displayName = currentUser?.name || 'Practitioner';
+  const displayEmail = currentUser?.email || 'practitioner@hayagriva.app';
+  const displayPlan = currentUser?.plan || 'ENTERPRISE';
+  const initials = getInitials(displayName);
 
   return (
     <header className="h-14 border-b border-border bg-card/80 backdrop-blur px-6 flex items-center justify-between sticky top-0 z-20">
@@ -81,16 +132,16 @@ export function ClientHeader() {
         {/* Practitioner Profile Pill */}
         <div className="flex items-center space-x-2.5 pl-1">
           <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white text-xs font-bold ring-2 ring-blue-500/20">
-            RR
+            {initials}
           </div>
           <div className="text-left hidden md:block">
             <div className="text-xs font-semibold text-foreground flex items-center gap-1">
-              <span>Adv. Rajeshwar Rao</span>
-              <span className="text-[9px] bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20 px-1 py-0.2 rounded font-mono">
-                ENTERPRISE
+              <span>{displayName}</span>
+              <span className="text-[9px] bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20 px-1 py-0.2 rounded font-mono uppercase">
+                {displayPlan}
               </span>
             </div>
-            <p className="text-[10px] text-muted-foreground font-mono">r.rao@insolvencylaw.in</p>
+            <p className="text-[10px] text-muted-foreground font-mono">{displayEmail}</p>
           </div>
 
           {/* Sign Out Button */}

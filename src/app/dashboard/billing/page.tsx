@@ -2,7 +2,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { CreditCard, Download, CheckCircle2, RefreshCw, Clock, ArrowUpRight, ShieldCheck } from 'lucide-react';
+import { Download, RefreshCw } from 'lucide-react';
 import { Invoice } from '@/lib/db/schema';
 import { cn } from '@/lib/utils';
 
@@ -36,7 +36,7 @@ export default function ClientBillingPage() {
         <div>
           <h1 className="text-xl font-bold tracking-tight text-foreground">Billing & Invoices</h1>
           <p className="text-xs text-muted-foreground mt-0.5">
-            Manage your practice suite subscription tier, payment methods, and GST tax invoice receipts.
+            Download and manage your practice suite tax invoice receipts and accounting records.
           </p>
         </div>
 
@@ -48,46 +48,6 @@ export default function ClientBillingPage() {
           <RefreshCw className={cn("w-3.5 h-3.5", loading ? "animate-spin" : "")} />
           <span>Refresh</span>
         </button>
-      </div>
-
-      {/* Subscription Tier Card */}
-      <div className="bg-card border border-border p-6 rounded-xl shadow-sm space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-border">
-          <div className="flex items-center space-x-3">
-            <div className="p-2.5 rounded-xl bg-gradient-to-tr from-amber-500 to-amber-700 text-white font-bold shadow-md shadow-amber-500/20">
-              <CreditCard className="w-5 h-5" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <h2 className="text-sm font-bold text-foreground">Enterprise Practice Suite Plan</h2>
-                <span className="text-[10px] bg-emerald-500/10 text-emerald-500 font-bold px-2 py-0.2 rounded border border-emerald-500/20 font-mono">
-                  ACTIVE
-                </span>
-              </div>
-              <p className="text-xs text-muted-foreground">Includes Commercial Recovery, Insolvency & ADR bare act cartridges</p>
-            </div>
-          </div>
-
-          <div className="text-right">
-            <div className="text-xl font-bold text-foreground">₹49,999 / year</div>
-            <p className="text-[11px] text-muted-foreground">Next billing date: 01/09/2027</p>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
-          <div className="bg-secondary/40 p-3 rounded-lg border border-border/50 space-y-1">
-            <span className="text-muted-foreground text-[11px]">Hardware Device Limit</span>
-            <div className="font-bold text-foreground">10 Concurrent Devices</div>
-          </div>
-          <div className="bg-secondary/40 p-3 rounded-lg border border-border/50 space-y-1">
-            <span className="text-muted-foreground text-[11px]">Monthly API / MCP Quota</span>
-            <div className="font-bold text-foreground">500,000 Ingestion Calls</div>
-          </div>
-          <div className="bg-secondary/40 p-3 rounded-lg border border-border/50 space-y-1">
-            <span className="text-muted-foreground text-[11px]">Payment Method on File</span>
-            <div className="font-bold text-foreground font-mono">HDFC Bank Visa •••• 8821</div>
-          </div>
-        </div>
       </div>
 
       {/* Invoices Table */}

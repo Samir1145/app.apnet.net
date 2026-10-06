@@ -3,27 +3,16 @@
 
 import React, { useEffect, useState } from 'react';
 import { 
-  User as UserIcon, 
   Lock, 
-  Key, 
   ShieldCheck, 
-  Building2, 
   Save, 
-  CheckCircle2, 
-  AlertCircle, 
-  Plus, 
-  Trash2, 
-  Zap, 
-  Clock, 
-  Shield
+  CheckCircle2 
 } from 'lucide-react';
-import { User, ApiKey } from '@/lib/db/schema';
-import { GenerateKeyModal } from '@/components/client/generate-key-modal';
+import { User } from '@/lib/db/schema';
 import { cn } from '@/lib/utils';
 
 export default function ClientProfilePage() {
   const [user, setUser] = useState<User | null>(null);
-  const [keys, setKeys] = useState<ApiKey[]>([]);
   const [loading, setLoading] = useState(true);
 
   const [name, setName] = useState('');
@@ -31,29 +20,19 @@ export default function ClientProfilePage() {
   const [saving, setSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
 
-  const [isKeyModalOpen, setIsKeyModalOpen] = useState(false);
-
   // 2FA Mock State
   const [twoFactorEnabled, setTwoFactorEnabled] = useState(true);
 
   const fetchProfileData = async () => {
     setLoading(true);
     try {
-      const [profileRes, keysRes] = await Promise.all([
-        fetch('/api/user/profile'),
-        fetch('/api/user/keys'),
-      ]);
+      const profileRes = await fetch('/api/user/profile');
 
       if (profileRes.ok) {
         const pData = await profileRes.json();
         setUser(pData.user);
         setName(pData.user.name);
         setOrg(pData.user.org || '');
-      }
-
-      if (keysRes.ok) {
-        const kData = await keysRes.json();
-        setKeys(kData.keys);
       }
     } catch (err) {
       console.error('Failed to load profile:', err);
@@ -87,29 +66,13 @@ export default function ClientProfilePage() {
     }
   };
 
-  const handleRevokeKey = async (keyId: string) => {
-    if (!confirm('Are you sure you want to revoke this MCP API key? Any agents using it will immediately lose cloud access.')) {
-      return;
-    }
-
-    const res = await fetch('/api/user/keys', {
-      method: 'DELETE',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ keyId }),
-    });
-
-    if (res.ok) {
-      setKeys((prev) => prev.map((k) => (k.id === keyId ? { ...k, isActive: false } : k)));
-    }
-  };
-
   return (
     <div className="space-y-6 pb-12 max-w-4xl">
       {/* Header */}
       <div>
         <h1 className="text-xl font-bold tracking-tight text-foreground">Practitioner Profile & Security</h1>
         <p className="text-xs text-muted-foreground mt-0.5">
-          Manage firm contact credentials, multi-factor authentication, and programmatic MCP agent tokens.
+          Manage firm contact credentials and multi-factor authentication.
         </p>
       </div>
 
@@ -211,101 +174,6 @@ export default function ClientProfilePage() {
           </button>
         </div>
       </div>
-
-      {/* Programmatic & MCP Cloud API Keys */}
-      <div className="bg-card border border-border p-6 rounded-xl shadow-sm space-y-4">
-        <div className="flex items-center justify-between pb-2 border-b border-border">
-          <div>
-            <div className="flex items-center gap-2">
-              <Zap className="w-4 h-4 text-purple-500" />
-              <h2 className="text-sm font-bold text-foreground">Programmatic & MCP Cloud API Keys</h2>
-            </div>
-            <p className="text-[11px] text-muted-foreground mt-0.5">
-              Bearer tokens used by autonomous AI agents to query bare acts, verify claims, and draft petitions.
-            </p>
-          </div>
-
-          <button
-            type="button"
-            onClick={() => setIsKeyModalOpen(true)}
-            className="px-3 py-1.5 text-xs font-semibold bg-purple-600 hover:bg-purple-700 text-white rounded-md shadow-sm flex items-center gap-1.5 transition-colors"
-          >
-            <Plus className="w-3.5 h-3.5" />
-            <span>Generate New Key</span>
-          </button>
-        </div>
-
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
-            <thead>
-              <tr className="border-b border-border bg-secondary/30">
-                <th className="px-4 py-2.5 text-xs font-semibold text-muted-foreground uppercase">Key Identifier</th>
-                <th className="px-4 py-2.5 text-xs font-semibold text-muted-foreground uppercase">Prefix Token</th>
-                <th className="px-4 py-2.5 text-xs font-semibold text-muted-foreground uppercase">Status</th>
-                <th className="px-4 py-2.5 text-xs font-semibold text-muted-foreground uppercase">Last Used</th>
-                <th className="px-4 py-2.5 text-xs font-semibold text-muted-foreground uppercase">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border">
-              {keys.length > 0 ? (
-                keys.map((k) => (
-                  <tr key={k.id} className="hover:bg-secondary/20 transition-colors">
-                    <td className="px-4 py-3 font-semibold text-xs text-foreground">
-                      {k.name}
-                    </td>
-                    <td className="px-4 py-3 font-mono text-xs text-purple-500 font-bold">
-                      {k.keyPrefix}...
-                    </td>
-                    <td className="px-4 py-3">
-                      <span className={cn(
-                        "px-2 py-0.5 rounded text-[10px] font-bold border font-mono",
-                        k.isActive
-                          ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20"
-                          : "bg-destructive/10 text-destructive border-destructive/20"
-                      )}>
-                        {k.isActive ? 'ACTIVE' : 'REVOKED'}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3 text-xs text-muted-foreground font-mono">
-                      {k.lastUsedAt ? new Date(k.lastUsedAt).toLocaleDateString() : 'Never'}
-                    </td>
-                    <td className="px-4 py-3">
-                      {k.isActive ? (
-                        <button
-                          type="button"
-                          onClick={() => handleRevokeKey(k.id)}
-                          className="px-2 py-1 text-xs text-destructive hover:bg-destructive/10 rounded transition-colors flex items-center gap-1"
-                          title="Revoke key"
-                        >
-                          <Trash2 className="w-3.5 h-3.5" />
-                          <span>Revoke</span>
-                        </button>
-                      ) : (
-                        <span className="text-[11px] text-muted-foreground italic">Revoked</span>
-                      )}
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan={5} className="px-4 py-6 text-center text-xs text-muted-foreground">
-                    No MCP API keys created yet. Generate one to connect automated CI/CD pipelines.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      {/* Generate Key Modal */}
-      <GenerateKeyModal
-        isOpen={isKeyModalOpen}
-        onClose={() => setIsKeyModalOpen(false)}
-        onSuccess={(newKey) => {
-          setKeys((prev) => [newKey, ...prev]);
-        }}
-      />
     </div>
   );
 }
