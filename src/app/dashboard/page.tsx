@@ -45,7 +45,7 @@ const mockDevices: DeviceSeat[] = [
     fingerprint: 'fp_win11_x1c_3391',
     ipAddress: '10.0.4.12 (Courtroom Wi-Fi)',
     lastPing: 'Yesterday at 17:40',
-    status: 'ACTIVE',
+    status: 'IDLE',
   },
 ];
 
@@ -159,13 +159,13 @@ export default function ClientDashboardPage() {
           <div className="flex items-center justify-between">
             <h2 className="text-base font-semibold text-foreground flex items-center gap-2">
               <Laptop className="w-4 h-4 text-amber-500" />
-              Active Hardware Seats & Devices
+              Chamber Hardware Seat & Transfer
               <span className="text-xs font-normal text-muted-foreground">
-                ({data?.license ? `${data.license.activeDevices} / ${data.license.maxDevices}` : '2 / 3'} Seats Activated)
+                ({data?.license ? `${data.license.activeDevices} / ${data.license.maxDevices}` : '1 / 1'} Seat Bound)
               </span>
             </h2>
             <Link href="/dashboard/licenses" className="text-xs text-amber-500 hover:underline flex items-center gap-1">
-              Manage Seats <ArrowUpRight className="w-3.5 h-3.5" />
+              Manage / Transfer Seat <ArrowUpRight className="w-3.5 h-3.5" />
             </Link>
           </div>
 

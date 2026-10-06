@@ -43,12 +43,19 @@ export function activateDevice(store: AdminStore, req: ActivateRequest) {
   } else if (existingActivation && !existingActivation.isActive) {
     // Re-activating a previously deactivated device
     if (activeActivations.length >= license.maxDevices) {
+      const boundMachine = activeActivations[0];
       return {
         success: false,
-        error: 'DEVICE_LIMIT_EXCEEDED',
-        message: `Active device limit of ${license.maxDevices} reached for plan ${license.planTier}.`,
+        error: 'SEAT_TRANSFER_REQUIRED',
+        message: `This license is bound to an active chamber machine (${boundMachine?.deviceName || 'Desktop'}). Transfer your seat in your Web Portal (http://localhost:3300/dashboard/licenses) to authorize this machine.`,
         maxDevices: license.maxDevices,
-        activeDevices: activeActivations.length
+        activeDevices: activeActivations.length,
+        activeDevice: boundMachine ? {
+          id: boundMachine.id,
+          deviceName: boundMachine.deviceName,
+          hardwareFingerprint: boundMachine.hardwareFingerprint,
+          lastPingAt: boundMachine.lastPingAt
+        } : undefined
       };
     }
     existingActivation.isActive = true;
@@ -58,12 +65,19 @@ export function activateDevice(store: AdminStore, req: ActivateRequest) {
   } else {
     // Brand new device activation
     if (activeActivations.length >= license.maxDevices) {
+      const boundMachine = activeActivations[0];
       return {
         success: false,
-        error: 'DEVICE_LIMIT_EXCEEDED',
-        message: `Active device limit of ${license.maxDevices} reached for plan ${license.planTier}.`,
+        error: 'SEAT_TRANSFER_REQUIRED',
+        message: `This license is bound to an active chamber machine (${boundMachine?.deviceName || 'Desktop'}). Transfer your seat in your Web Portal (http://localhost:3300/dashboard/licenses) to authorize this machine.`,
         maxDevices: license.maxDevices,
-        activeDevices: activeActivations.length
+        activeDevices: activeActivations.length,
+        activeDevice: boundMachine ? {
+          id: boundMachine.id,
+          deviceName: boundMachine.deviceName,
+          hardwareFingerprint: boundMachine.hardwareFingerprint,
+          lastPingAt: boundMachine.lastPingAt
+        } : undefined
       };
     }
 
@@ -158,5 +172,67 @@ export function deactivateDevice(store: AdminStore, activationId: string, licens
     success: true,
     freedSlots: 1,
     remainingActiveDevices: remaining
+  };
+}
+
+export interface TransferSeatRequest {
+  deviceName: string;
+  osInfo: string;
+  hardwareFingerprint: string;
+  ipAddress?: string;
+}
+
+export function transferSeat(
+  store: AdminStore,
+  licenseId: string,
+  newDevice: TransferSeatRequest
+) {
+  const license = store.licenses.find(l => l.id === licenseId);
+  if (!license) {
+    return { success: false, error: 'LICENSE_NOT_FOUND', message: 'License record not found' };
+  }
+
+  // 1. Deactivate currently active machine(s)
+  const activeActivations = store.activations.filter(a => a.licenseId === licenseId && a.isActive);
+  for (const act of activeActivations) {
+    act.isActive = false;
+    act.deactivatedAt = new Date();
+  }
+
+  // 2. Activate or create record for new machine
+  let targetActivation = store.activations.find(
+    a => a.licenseId === licenseId && a.hardwareFingerprint === newDevice.hardwareFingerprint
+  );
+
+  if (targetActivation) {
+    targetActivation.isActive = true;
+    targetActivation.activatedAt = new Date();
+    targetActivation.lastPingAt = new Date();
+    targetActivation.deactivatedAt = null;
+    targetActivation.deviceName = newDevice.deviceName || targetActivation.deviceName;
+    targetActivation.osInfo = newDevice.osInfo || targetActivation.osInfo;
+    targetActivation.ipAddress = newDevice.ipAddress || targetActivation.ipAddress;
+  } else {
+    targetActivation = {
+      id: `act_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`,
+      licenseId: license.id,
+      userId: license.userId,
+      hardwareFingerprint: newDevice.hardwareFingerprint,
+      deviceName: newDevice.deviceName || 'Desktop Workstation',
+      osInfo: newDevice.osInfo || 'Desktop OS',
+      ipAddress: newDevice.ipAddress || '127.0.0.1',
+      lastPingAt: new Date(),
+      isActive: true,
+      activatedAt: new Date(),
+      deactivatedAt: null
+    };
+    store.activations.push(targetActivation);
+  }
+
+  return {
+    success: true,
+    transferredTo: targetActivation.deviceName,
+    previousDeviceDeactivated: activeActivations.length > 0,
+    activeActivationId: targetActivation.id
   };
 }

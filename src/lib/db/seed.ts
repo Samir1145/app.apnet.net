@@ -502,7 +502,7 @@ export function seedInitialData(): AdminStore {
       userId: 'usr_adv_01',
       licenseKey: 'HAYA-ENT-8F92-K4X9-98QA',
       planTier: 'ENTERPRISE',
-      maxDevices: 10,
+      maxDevices: 1,
       status: 'ACTIVE',
       expiresAt: new Date('2027-09-01T00:00:00Z'),
       createdAt: new Date('2026-03-15T11:20:00Z')
@@ -512,7 +512,7 @@ export function seedInitialData(): AdminStore {
       userId: 'usr_adv_02',
       licenseKey: 'HAYA-PRO-7X9K-4M2P-9Q8A',
       planTier: 'PROFESSIONAL',
-      maxDevices: 3,
+      maxDevices: 1,
       status: 'ACTIVE',
       expiresAt: new Date('2027-09-05T00:00:00Z'),
       createdAt: new Date('2026-04-10T15:00:00Z')
@@ -522,7 +522,7 @@ export function seedInitialData(): AdminStore {
       userId: 'usr_adv_03',
       licenseKey: 'HAYA-PRO-3D1N-8L5W-2Z7C',
       planTier: 'PROFESSIONAL',
-      maxDevices: 3,
+      maxDevices: 1,
       status: 'ACTIVE',
       expiresAt: new Date('2027-09-10T00:00:00Z'),
       createdAt: new Date('2026-05-02T12:00:00Z')
@@ -552,9 +552,9 @@ export function seedInitialData(): AdminStore {
       osInfo: 'Windows NT 10.0 (Win64; x64)',
       ipAddress: '103.21.124.8',
       lastPingAt: new Date('2026-10-02T16:20:00Z'),
-      isActive: true,
+      isActive: false,
       activatedAt: new Date('2026-03-20T14:30:00Z'),
-      deactivatedAt: null
+      deactivatedAt: new Date('2026-10-02T16:20:00Z')
     },
     {
       id: 'act_pooja_air',

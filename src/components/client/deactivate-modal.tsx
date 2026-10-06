@@ -2,7 +2,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { AlertTriangle, PowerOff, X } from 'lucide-react';
+import { PowerOff } from 'lucide-react';
 import { Activation } from '@/lib/db/schema';
 
 interface DeactivateModalProps {
@@ -43,9 +43,9 @@ export function DeactivateModal({ device, isOpen, onClose, onConfirm }: Deactiva
             <PowerOff className="w-5 h-5" />
           </div>
           <div className="space-y-1">
-            <h3 className="text-sm font-bold text-foreground">Deactivate Hardware Device</h3>
+            <h3 className="text-sm font-bold text-foreground">Release Chamber Seat</h3>
             <p className="text-xs text-muted-foreground">
-              Are you sure you want to disconnect <strong className="text-foreground">{device.deviceName}</strong>?
+              Are you sure you want to unbind <strong className="text-foreground">{device.deviceName}</strong>?
             </p>
           </div>
         </div>
@@ -53,10 +53,10 @@ export function DeactivateModal({ device, isOpen, onClose, onConfirm }: Deactiva
         <div className="bg-secondary/40 border border-border p-3 rounded-lg text-xs space-y-1">
           <p className="font-semibold text-foreground flex items-center gap-1.5">
             <span className="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
-            Frees 1 Device Slot
+            Opens 1 Chamber Seat
           </p>
           <p className="text-[11px] text-muted-foreground">
-            Deactivating this machine will revoke its local offline token and MCP agent key, immediately freeing up a slot for another laptop or drafting workstation.
+            Releasing this machine frees your single seat, allowing you to bind another courtroom laptop or drafting workstation immediately.
           </p>
         </div>
 
@@ -76,7 +76,7 @@ export function DeactivateModal({ device, isOpen, onClose, onConfirm }: Deactiva
             className="px-3 py-1.5 text-xs font-semibold bg-destructive hover:bg-destructive/90 text-destructive-foreground rounded-md shadow-sm flex items-center gap-1.5 transition-all disabled:opacity-50"
           >
             <PowerOff className="w-3.5 h-3.5" />
-            <span>{loading ? 'Deactivating...' : 'Confirm Deactivation'}</span>
+            <span>{loading ? 'Releasing...' : 'Release Seat'}</span>
           </button>
         </div>
       </div>

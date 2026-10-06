@@ -48,7 +48,7 @@ const navSections: NavSection[] = [
   {
     title: 'Governance & Accounting',
     items: [
-      { name: 'Licenses & Devices', href: '/dashboard/licenses', icon: KeyRound, badge: '2 Active' },
+      { name: 'Licenses & Devices', href: '/dashboard/licenses', icon: KeyRound, badge: '1 Active' },
       { name: 'Invoices & Payments', href: '/dashboard/billing', icon: CreditCard },
       { name: 'Profile & Security', href: '/dashboard/profile', icon: UserCheck },
       { name: 'Support Tickets', href: '/dashboard/support', icon: HelpCircle },

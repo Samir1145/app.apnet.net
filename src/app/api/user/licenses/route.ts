@@ -27,7 +27,7 @@ export async function GET(request: Request) {
       license,
       activations: userActivations,
       activeDevicesCount: userActivations.filter(a => a.isActive).length,
-      maxDevices: license ? license.maxDevices : 3,
+      maxDevices: license ? license.maxDevices : 1,
     }, {
       status: 200,
       headers: { 'Cache-Control': 'no-store, max-age=0' }
