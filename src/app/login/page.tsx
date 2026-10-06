@@ -92,9 +92,18 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-background px-4">
       <div className="w-full max-w-md bg-card border border-border rounded-xl shadow-2xl p-8 space-y-6">
         {/* Header */}
-        <div className="text-center space-y-2">
-          <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-700 mx-auto flex items-center justify-center text-2xl shadow-lg shadow-blue-500/25">
-            🐎
+        <div className="text-center space-y-3">
+          <div className="flex justify-center">
+            <img
+              src="/branding/hayagriva_logo_white.png"
+              alt="Lord Hayagriva Sovereign Intelligence"
+              className="h-20 w-auto object-contain filter drop-shadow-md hover:scale-105 transition-transform duration-200 hidden dark:block"
+            />
+            <img
+              src="/branding/hayagriva_logo_transparent.png"
+              alt="Lord Hayagriva Sovereign Intelligence"
+              className="h-20 w-auto object-contain filter drop-shadow-sm hover:scale-105 transition-transform duration-200 block dark:hidden"
+            />
           </div>
           <h1 className="text-xl font-bold tracking-tight text-foreground">Hayagriva Portal Access</h1>
           <p className="text-xs text-muted-foreground">Sign in to your Practitioner Workspace or Admin Center</p>

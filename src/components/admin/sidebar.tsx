@@ -75,8 +75,17 @@ export function AdminSidebar() {
       {/* Brand Header */}
       <div className="p-4 border-b border-border flex items-center justify-between">
         <div className="flex items-center space-x-2.5">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-500 to-amber-700 flex items-center justify-center text-white font-bold shadow-md shadow-amber-500/20">
-            🐎
+          <div className="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center p-0.5 shadow-sm overflow-hidden">
+            <img
+              src="/branding/hayagriva_icon_white.png"
+              alt="Hayagriva"
+              className="w-full h-full object-contain filter drop-shadow-sm hidden dark:block"
+            />
+            <img
+              src="/branding/hayagriva_icon.png"
+              alt="Hayagriva"
+              className="w-full h-full object-contain filter drop-shadow-sm block dark:hidden"
+            />
           </div>
           <div>
             <div className="font-semibold text-sm tracking-tight text-foreground flex items-center gap-1.5">

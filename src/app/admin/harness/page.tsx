@@ -117,8 +117,17 @@ export default function AdminHarnessPage() {
       <div className="p-5 rounded-xl border border-border bg-card space-y-3">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-500 font-bold text-base">
-              🐎
+            <div className="w-10 h-10 rounded-lg bg-amber-500/15 border border-amber-500/30 flex items-center justify-center p-1">
+              <img
+                src="/branding/hayagriva_icon_white.png"
+                alt="Hayagriva"
+                className="w-full h-full object-contain filter drop-shadow-sm hidden dark:block"
+              />
+              <img
+                src="/branding/hayagriva_icon.png"
+                alt="Hayagriva"
+                className="w-full h-full object-contain filter drop-shadow-sm block dark:hidden"
+              />
             </div>
             <div>
               <div className="flex items-center gap-2">

@@ -92,12 +92,21 @@ export default function RegisterPage() {
 
       <div className="w-full max-w-xl space-y-6">
         {/* Branding Header */}
-        <div className="text-center space-y-2">
-          <div className="inline-flex items-center justify-center p-3 rounded-2xl bg-blue-500/10 border border-blue-500/20 text-blue-500 mb-1">
-            <Shield className="w-8 h-8" />
+        <div className="text-center space-y-3">
+          <div className="flex justify-center">
+            <img
+              src="/branding/hayagriva_logo_white.png"
+              alt="Lord Hayagriva Sovereign Intelligence"
+              className="h-20 w-auto object-contain filter drop-shadow-md hover:scale-105 transition-transform duration-200 hidden dark:block"
+            />
+            <img
+              src="/branding/hayagriva_logo_transparent.png"
+              alt="Lord Hayagriva Sovereign Intelligence"
+              className="h-20 w-auto object-contain filter drop-shadow-sm hover:scale-105 transition-transform duration-200 block dark:hidden"
+            />
           </div>
           <h1 className="text-2xl font-bold tracking-tight text-foreground flex items-center justify-center gap-2">
-            <span>🐎 HAYAGRIVA</span>
+            <span>HAYAGRIVA</span>
             <span className="text-xs px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-500 border border-blue-500/20 font-mono">
               SOVEREIGN LEGAL OS
             </span>
