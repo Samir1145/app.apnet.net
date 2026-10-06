@@ -126,17 +126,17 @@ export default function VaultsCatalogPage() {
         <div>
           <div className="flex items-center gap-2 mb-1.5">
             <span className="text-xs font-bold font-mono px-2 py-0.5 rounded bg-amber-500/15 text-amber-500 border border-amber-500/30">
-              STATUTORY VAULTS CATALOG
+              STATUTORY VAULTS
             </span>
             <span className="text-xs font-semibold px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-500">
-              India Code Synced
+              In-Harness Auto-Sync
             </span>
           </div>
           <h1 className="text-2xl font-bold tracking-tight text-foreground">
-            Statutory Bare Act Vault Cartridges
+            Statutory Vaults
           </h1>
           <p className="text-sm text-muted-foreground mt-1">
-            Authoritative, air-gapped legislative memory cartridges compiled from the official India Code legislative mirror.
+            Authoritative, air-gapped legislative memory cartridges that sync automatically inside your offline desktop harness.
           </p>
         </div>
 

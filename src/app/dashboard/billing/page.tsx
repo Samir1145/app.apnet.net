@@ -34,9 +34,9 @@ export default function ClientBillingPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl font-bold tracking-tight text-foreground">Billing & Invoices</h1>
+          <h1 className="text-xl font-bold tracking-tight text-foreground">Invoices & Payments</h1>
           <p className="text-xs text-muted-foreground mt-0.5">
-            Download and manage your practice suite tax invoice receipts and accounting records.
+            Download and manage your practice suite tax invoices, payment receipts, and accounting records.
           </p>
         </div>
 

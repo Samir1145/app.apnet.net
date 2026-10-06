@@ -51,17 +51,17 @@ export default function AgentRegistryPage() {
         <div>
           <div className="flex items-center gap-2 mb-1.5">
             <span className="text-xs font-bold font-mono px-2 py-0.5 rounded bg-amber-500/15 text-amber-500 border border-amber-500/30">
-              AGENT FOUNDRY & REGISTRY
+              AGENT STUDIO
             </span>
             <span className="text-xs font-semibold px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-500">
-              Harness Dockable
+              Harness Dockable (.haya)
             </span>
           </div>
           <h1 className="text-2xl font-bold tracking-tight text-foreground">
-            Agent Studio & Sovereign Foundry
+            Agent Studio
           </h1>
           <p className="text-sm text-muted-foreground mt-1">
-            Build, test, and compile autonomous legal agents into portable <code className="text-amber-400">.haya</code> cartridges that dock directly into your sovereign desktop IDE.
+            Build, configure, and compile autonomous legal agents into portable <code className="text-amber-500">.haya</code> packages that dock directly into your sovereign desktop harness.
           </p>
         </div>
 

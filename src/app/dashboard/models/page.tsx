@@ -86,17 +86,17 @@ export default function ModelsHubPage() {
         <div>
           <div className="flex items-center gap-2 mb-1.5">
             <span className="text-xs font-bold font-mono px-2 py-0.5 rounded bg-amber-500/15 text-amber-500 border border-amber-500/30">
-              OFFLINE AI HUB
+              BHARATGEN SOVEREIGN MODELS
             </span>
             <span className="text-xs font-semibold px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-500">
-              Zero Cloud Telemetry
+              In-Harness Auto-Sync
             </span>
           </div>
           <h1 className="text-2xl font-bold tracking-tight text-foreground">
-            AI Models Hub & Quantized Engines
+            BharatGen Models & Certified SLMs
           </h1>
           <p className="text-sm text-muted-foreground mt-1">
-            Download pre-quantized GGUF reasoning engines and dense ONNX embeddings for 100% offline in-chamber execution.
+            Certified sovereign reasoning models and dense embedding weights that sync automatically inside your offline desktop harness.
           </p>
         </div>
       </div>

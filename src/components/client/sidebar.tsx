@@ -31,32 +31,27 @@ interface NavSection {
 
 const navSections: NavSection[] = [
   {
-    title: 'Workspace',
+    title: 'Chamber Workspace',
     items: [
       { name: 'Overview', href: '/dashboard', icon: LayoutDashboard },
-    ]
-  },
-  {
-    title: 'Sovereign Assets',
-    items: [
+      { name: 'Agent Studio', href: '/dashboard/agents', icon: Bot, badge: 'Core' },
       { name: 'Desktop Harness', href: '/dashboard/harness', icon: DownloadCloud },
-      { name: 'Statutory Bare Act Vaults', href: '/dashboard/vaults', icon: Database },
-      { name: 'AI Models Hub', href: '/dashboard/models', icon: Cpu },
     ]
   },
   {
-    title: 'Agent Foundry',
+    title: 'Sovereign Catalogs',
     items: [
-      { name: 'Agent Studio & Registry', href: '/dashboard/agents', icon: Bot },
+      { name: 'Statutory Vaults', href: '/dashboard/vaults', icon: Database },
+      { name: 'BharatGen Models', href: '/dashboard/models', icon: Cpu },
     ]
   },
   {
     title: 'Governance & Accounting',
     items: [
       { name: 'Licenses & Devices', href: '/dashboard/licenses', icon: KeyRound, badge: '2 Active' },
-      { name: 'Billing & Invoices', href: '/dashboard/billing', icon: CreditCard },
+      { name: 'Invoices & Payments', href: '/dashboard/billing', icon: CreditCard },
       { name: 'Profile & Security', href: '/dashboard/profile', icon: UserCheck },
-      { name: 'Support', href: '/dashboard/support', icon: HelpCircle },
+      { name: 'Support Tickets', href: '/dashboard/support', icon: HelpCircle },
     ]
   }
 ];
@@ -122,7 +117,11 @@ export function ClientSidebar() {
                   {item.badge && (
                     <span className={cn(
                       "px-1.5 py-0.5 rounded-full text-[10px] font-bold",
-                      isActive ? "bg-amber-500/20 text-amber-500" : "bg-emerald-500/15 text-emerald-500"
+                      isActive 
+                        ? "bg-amber-500/20 text-amber-500" 
+                        : item.badge === 'Core'
+                          ? "bg-amber-500/15 text-amber-500 border border-amber-500/30"
+                          : "bg-emerald-500/15 text-emerald-500"
                     )}>
                       {item.badge}
                     </span>

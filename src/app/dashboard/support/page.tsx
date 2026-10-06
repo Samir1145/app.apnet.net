@@ -36,9 +36,9 @@ export default function ClientSupportPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl font-bold tracking-tight text-foreground">Chamber Support & Inquiries</h1>
+          <h1 className="text-xl font-bold tracking-tight text-foreground">Support Tickets</h1>
           <p className="text-xs text-muted-foreground mt-0.5">
-            File engineering inquiries, statutory template requests, and bare act XML cartridge assistance.
+            File chamber inquiries, statutory requests, and track open resolution tickets.
           </p>
         </div>
 
