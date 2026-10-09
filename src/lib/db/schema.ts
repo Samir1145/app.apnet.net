@@ -91,7 +91,8 @@ export const licenses = pgTable("licenses", {
   id: text("id").primaryKey(), // lic_pro_xxxx
   userId: text("user_id").notNull(),
   licenseKey: varchar("license_key", { length: 64 }).notNull().unique(),
-  planTier: varchar("plan_tier", { length: 50 }).default("PROFESSIONAL").notNull(), // STARTER, PROFESSIONAL, ENTERPRISE
+  planTier: varchar("plan_tier", { length: 50 }).default("PROFESSIONAL").notNull(),
+  domain: varchar("domain", { length: 50 }).default("LEGAL_DISPUTE"), // STARTER, PROFESSIONAL, ENTERPRISE
   maxDevices: integer("max_devices").default(3).notNull(),
   status: varchar("status", { length: 50 }).default("ACTIVE").notNull(), // ACTIVE, SUSPENDED, EXPIRED
   expiresAt: timestamp("expires_at").notNull(),
@@ -106,6 +107,7 @@ export const activations = pgTable("activations", {
   hardwareFingerprint: varchar("hardware_fingerprint", { length: 64 }).notNull(),
   deviceName: varchar("device_name", { length: 100 }).notNull(),
   osInfo: varchar("os_info", { length: 100 }).notNull(),
+  domain: varchar("domain", { length: 50 }).default("LEGAL_DISPUTE"),
   ipAddress: varchar("ip_address", { length: 45 }).notNull(),
   lastPingAt: timestamp("last_ping_at").defaultNow().notNull(),
   isActive: boolean("is_active").default(true).notNull(),
@@ -178,3 +180,28 @@ export type CustomAgent = typeof customAgents.$inferSelect;
 export type NewCustomAgent = typeof customAgents.$inferInsert;
 export type AssetDownload = typeof assetDownloads.$inferSelect;
 export type NewAssetDownload = typeof assetDownloads.$inferInsert;
+
+// 12. Hub Community & Chamber Items Table
+export const hubItems = pgTable("hub_items", {
+  id: text("id").primaryKey(),
+  userId: text("user_id"),
+  orgId: varchar("org_id", { length: 255 }),
+  itemType: varchar("item_type", { length: 50 }).notNull(), // agent-skill, slash-command, system-prompt, agent-flow, workspace
+  name: varchar("name", { length: 255 }).notNull(),
+  slug: varchar("slug", { length: 255 }).notNull(),
+  description: text("description"),
+  visibility: varchar("visibility", { length: 50 }).default("PUBLIC").notNull(), // PUBLIC, PRIVATE_CHAMBER
+  verified: boolean("verified").default(false).notNull(),
+  downloads: integer("downloads").default(0).notNull(),
+  tags: jsonb("tags").default([]).notNull(),
+  manifest: jsonb("manifest").notNull(),
+  importId: varchar("import_id", { length: 255 }),
+  authorName: varchar("author_name", { length: 255 }).default("MintplexLabs"),
+  authorUrl: text("author_url"),
+  imageUrl: text("image_url"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export type HubItem = typeof hubItems.$inferSelect;
+export type NewHubItem = typeof hubItems.$inferInsert;

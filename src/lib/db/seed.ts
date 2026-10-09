@@ -1,5 +1,6 @@
 // admin-panel/src/lib/db/seed.ts
-import { User, SystemLog, Invoice, DownloadRecord, SupportTicket, AdminAuditLog, License, Activation, ApiKey } from './schema';
+import { User, SystemLog, Invoice, DownloadRecord, SupportTicket, AdminAuditLog, License, Activation, ApiKey, HubItem } from './schema';
+import { seedHubData } from './seed-hub';
 
 export interface AdminStore {
   users: User[];
@@ -11,6 +12,7 @@ export interface AdminStore {
   licenses: License[];
   activations: Activation[];
   apiKeys: ApiKey[];
+  hubItems: HubItem[];
 }
 
 let globalStore: AdminStore | null = null;
@@ -526,6 +528,36 @@ export function seedInitialData(): AdminStore {
       status: 'ACTIVE',
       expiresAt: new Date('2027-09-10T00:00:00Z'),
       createdAt: new Date('2026-05-02T12:00:00Z')
+    },
+    {
+      id: "lic_chamber_live_test",
+      userId: "usr_superadmin_01",
+      licenseKey: "HAYA-SOV-CHAMBER-2026-LIVE",
+      planTier: "SOVEREIGN_ENTERPRISE",
+      maxDevices: 1,
+      status: "ACTIVE",
+      expiresAt: new Date("2028-12-31T23:59:59Z"),
+      createdAt: new Date("2026-10-07T12:00:00Z")
+    },
+    {
+      id: "lic_sovereign_crypto_1791378523489",
+      userId: "usr_superadmin_01",
+      licenseKey: "HAYA-E261-0QJ4-Q1NQ-8WDM",
+      planTier: "SOVEREIGN_ENTERPRISE",
+      maxDevices: 1,
+      status: "ACTIVE",
+      expiresAt: new Date("2028-12-31T23:59:59Z"),
+      createdAt: new Date()
+    },
+    {
+      id: "lic_sovereign_atul",
+      userId: "usr_superadmin_01",
+      licenseKey: "HAYA-SOV-8F92-K4X9-2026",
+      planTier: "SOVEREIGN_ENTERPRISE",
+      maxDevices: 1,
+      status: "ACTIVE",
+      expiresAt: new Date("2028-12-31T23:59:59Z"),
+      createdAt: new Date("2026-10-07T12:00:00Z")
     }
   ];
 
@@ -607,7 +639,8 @@ export function seedInitialData(): AdminStore {
     adminAuditLogs,
     licenses,
     activations,
-    apiKeys
+    apiKeys,
+    hubItems: seedHubData().hubItems
   };
 
   return globalStore;
