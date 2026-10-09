@@ -102,6 +102,7 @@ export async function registerPractitioner(input: RegisterInput): Promise<Regist
     userId: userId,
     licenseKey: licenseKey,
     planTier: 'STARTER',
+    domain: 'LEGAL_DISPUTE',
     maxDevices: 1,
     status: 'ACTIVE',
     expiresAt: expiresAt,

@@ -501,6 +501,7 @@ export function seedInitialData(): AdminStore {
   const licenses: License[] = [
     {
       id: 'lic_enterprise_rao',
+      domain: 'LEGAL_DISPUTE',
       userId: 'usr_adv_01',
       licenseKey: 'HAYA-ENT-8F92-K4X9-98QA',
       planTier: 'ENTERPRISE',
@@ -511,6 +512,7 @@ export function seedInitialData(): AdminStore {
     },
     {
       id: 'lic_pro_pooja',
+      domain: 'LEGAL_DISPUTE',
       userId: 'usr_adv_02',
       licenseKey: 'HAYA-PRO-7X9K-4M2P-9Q8A',
       planTier: 'PROFESSIONAL',
@@ -521,6 +523,7 @@ export function seedInitialData(): AdminStore {
     },
     {
       id: 'lic_pro_vikram',
+      domain: 'LEGAL_DISPUTE',
       userId: 'usr_adv_03',
       licenseKey: 'HAYA-PRO-3D1N-8L5W-2Z7C',
       planTier: 'PROFESSIONAL',
@@ -533,6 +536,7 @@ export function seedInitialData(): AdminStore {
       id: "lic_chamber_live_test",
       userId: "usr_superadmin_01",
       licenseKey: "HAYA-SOV-CHAMBER-2026-LIVE",
+      domain: "LEGAL_DISPUTE",
       planTier: "SOVEREIGN_ENTERPRISE",
       maxDevices: 1,
       status: "ACTIVE",
@@ -543,6 +547,7 @@ export function seedInitialData(): AdminStore {
       id: "lic_sovereign_crypto_1791378523489",
       userId: "usr_superadmin_01",
       licenseKey: "HAYA-E261-0QJ4-Q1NQ-8WDM",
+      domain: "LEGAL_DISPUTE",
       planTier: "SOVEREIGN_ENTERPRISE",
       maxDevices: 1,
       status: "ACTIVE",
@@ -553,6 +558,7 @@ export function seedInitialData(): AdminStore {
       id: "lic_sovereign_atul",
       userId: "usr_superadmin_01",
       licenseKey: "HAYA-SOV-8F92-K4X9-2026",
+      domain: "LEGAL_DISPUTE",
       planTier: "SOVEREIGN_ENTERPRISE",
       maxDevices: 1,
       status: "ACTIVE",
@@ -564,6 +570,7 @@ export function seedInitialData(): AdminStore {
   const activations: Activation[] = [
     {
       id: 'act_rao_m3max',
+      domain: 'LEGAL_DISPUTE',
       licenseId: 'lic_enterprise_rao',
       userId: 'usr_adv_01',
       hardwareFingerprint: 'a3f89e21bc047de193021fa4b732e91048a6df29c48e01934ba7109283f619a0',
@@ -577,6 +584,7 @@ export function seedInitialData(): AdminStore {
     },
     {
       id: 'act_rao_office_pc',
+      domain: 'LEGAL_DISPUTE',
       licenseId: 'lic_enterprise_rao',
       userId: 'usr_adv_01',
       hardwareFingerprint: 'f49a8102bdc9472183e91029ba834190cba72189304192847102938475102938',
@@ -590,6 +598,7 @@ export function seedInitialData(): AdminStore {
     },
     {
       id: 'act_pooja_air',
+      domain: 'LEGAL_DISPUTE',
       licenseId: 'lic_pro_pooja',
       userId: 'usr_adv_02',
       hardwareFingerprint: '7b2a910248c01928471928304918273645019283746102938475610293847561',

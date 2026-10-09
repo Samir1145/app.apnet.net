@@ -10,6 +10,8 @@ export interface ActivateRequest {
   osInfo: string;
   ipAddress?: string;
   appVersion?: string;
+  moveSeat?: boolean;
+  domain?: string;
 }
 
 export function activateDevice(store: AdminStore, req: ActivateRequest) {
@@ -43,20 +45,31 @@ export function activateDevice(store: AdminStore, req: ActivateRequest) {
   } else if (existingActivation && !existingActivation.isActive) {
     // Re-activating a previously deactivated device
     if (activeActivations.length >= license.maxDevices) {
-      const boundMachine = activeActivations[0];
-      return {
-        success: false,
-        error: 'SEAT_TRANSFER_REQUIRED',
-        message: `This license is bound to an active chamber machine (${boundMachine?.deviceName || 'Desktop'}). Transfer your seat in your Web Portal (http://localhost:3300/dashboard/licenses) to authorize this machine.`,
-        maxDevices: license.maxDevices,
-        activeDevices: activeActivations.length,
-        activeDevice: boundMachine ? {
-          id: boundMachine.id,
-          deviceName: boundMachine.deviceName,
-          hardwareFingerprint: boundMachine.hardwareFingerprint,
-          lastPingAt: boundMachine.lastPingAt
-        } : undefined
-      };
+      if (req.moveSeat) {
+        for (const prev of activeActivations) {
+          prev.isActive = false;
+          prev.deactivatedAt = new Date();
+          store.apiKeys.forEach(k => {
+            if (k.activationId === prev.id) k.isActive = false;
+          });
+        }
+      } else {
+        const boundMachine = activeActivations[0];
+        return {
+          success: false,
+          error: 'SEAT_TRANSFER_REQUIRED',
+          message: `This license is currently active on ${boundMachine?.deviceName || 'another workstation'}.`,
+          boundDeviceName: boundMachine?.deviceName || 'Desktop Station',
+          maxDevices: license.maxDevices,
+          activeDevices: activeActivations.length,
+          activeDevice: boundMachine ? {
+            id: boundMachine.id,
+            deviceName: boundMachine.deviceName,
+            hardwareFingerprint: boundMachine.hardwareFingerprint,
+            lastPingAt: boundMachine.lastPingAt
+          } : undefined
+        };
+      }
     }
     existingActivation.isActive = true;
     existingActivation.activatedAt = new Date();
@@ -65,20 +78,31 @@ export function activateDevice(store: AdminStore, req: ActivateRequest) {
   } else {
     // Brand new device activation
     if (activeActivations.length >= license.maxDevices) {
-      const boundMachine = activeActivations[0];
-      return {
-        success: false,
-        error: 'SEAT_TRANSFER_REQUIRED',
-        message: `This license is bound to an active chamber machine (${boundMachine?.deviceName || 'Desktop'}). Transfer your seat in your Web Portal (http://localhost:3300/dashboard/licenses) to authorize this machine.`,
-        maxDevices: license.maxDevices,
-        activeDevices: activeActivations.length,
-        activeDevice: boundMachine ? {
-          id: boundMachine.id,
-          deviceName: boundMachine.deviceName,
-          hardwareFingerprint: boundMachine.hardwareFingerprint,
-          lastPingAt: boundMachine.lastPingAt
-        } : undefined
-      };
+      if (req.moveSeat) {
+        for (const prev of activeActivations) {
+          prev.isActive = false;
+          prev.deactivatedAt = new Date();
+          store.apiKeys.forEach(k => {
+            if (k.activationId === prev.id) k.isActive = false;
+          });
+        }
+      } else {
+        const boundMachine = activeActivations[0];
+        return {
+          success: false,
+          error: 'SEAT_TRANSFER_REQUIRED',
+          message: `This license is currently active on ${boundMachine?.deviceName || 'another workstation'}.`,
+          boundDeviceName: boundMachine?.deviceName || 'Desktop Station',
+          maxDevices: license.maxDevices,
+          activeDevices: activeActivations.length,
+          activeDevice: boundMachine ? {
+            id: boundMachine.id,
+            deviceName: boundMachine.deviceName,
+            hardwareFingerprint: boundMachine.hardwareFingerprint,
+            lastPingAt: boundMachine.lastPingAt
+          } : undefined
+        };
+      }
     }
 
     const newActivationId = `act_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
@@ -89,6 +113,7 @@ export function activateDevice(store: AdminStore, req: ActivateRequest) {
       hardwareFingerprint: req.hardwareFingerprint,
       deviceName: req.deviceName || 'Desktop Workstation',
       osInfo: req.osInfo || 'Desktop OS',
+      domain: req.domain || license.domain || 'LEGAL_DISPUTE',
       ipAddress: req.ipAddress || '127.0.0.1',
       lastPingAt: new Date(),
       isActive: true,
@@ -99,12 +124,15 @@ export function activateDevice(store: AdminStore, req: ActivateRequest) {
     store.activations.push(existingActivation);
   }
 
+  if (!existingActivation) throw new Error("Activation failed");
+
   // 3. Generate Cryptographic Tokens
   const offlineToken = generateOfflineToken({
     licenseKey: license.licenseKey,
     userId: license.userId,
     hardwareFingerprint: req.hardwareFingerprint,
     planTier: license.planTier,
+    domain: req.domain || (license as any).domain || "LEGAL_DISPUTE",
     expiresAt: new Date(license.expiresAt).toISOString(),
     issuedAt: new Date().toISOString()
   });
@@ -134,6 +162,7 @@ export function activateDevice(store: AdminStore, req: ActivateRequest) {
     license: {
       key: license.licenseKey,
       plan: license.planTier,
+      domain: req.domain || (license as any).domain || "LEGAL_DISPUTE",
       expiresAt: new Date(license.expiresAt).toISOString(),
       maxDevices: license.maxDevices,
       activeDevices: updatedActiveCount
@@ -220,6 +249,7 @@ export function transferSeat(
       hardwareFingerprint: newDevice.hardwareFingerprint,
       deviceName: newDevice.deviceName || 'Desktop Workstation',
       osInfo: newDevice.osInfo || 'Desktop OS',
+      domain: license.domain || 'LEGAL_DISPUTE',
       ipAddress: newDevice.ipAddress || '127.0.0.1',
       lastPingAt: new Date(),
       isActive: true,
@@ -228,6 +258,8 @@ export function transferSeat(
     };
     store.activations.push(targetActivation);
   }
+
+  if (!targetActivation) throw new Error("Seat transfer failed");
 
   return {
     success: true,
