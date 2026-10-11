@@ -8,6 +8,7 @@ export interface OfflineTokenPayload {
   userId: string;
   hardwareFingerprint: string;
   planTier: string;
+  domain?: string;
   expiresAt: string;
   issuedAt: string;
 }

@@ -45,8 +45,8 @@ Open [http://localhost:3300](http://localhost:3300) in your browser.
 
 ---
 
-## 🏛️ Core Features
-
+- **Resolution Bazaar & Agent Registry (`/hub`):** Sovereign catalog featuring Skills, Autonomous Agents, Statutory Vaults, Models, and Chamber-Private assets with live search, category pills, and multi-file manifest code viewer.
+- **Desktop Fleet Synchronization (`GET /api/v1/hub/sync`):** Secure workstation sync validating `X-Hayagriva-License` and hardware fingerprint (`X-Hayagriva-Fingerprint`) against registered activations, returning presigned S3 asset URLs and file manifests for local installation.
 - **Desktop IDE Licensing Server (`POST /api/v1/activate`):** Cryptographically signs HMAC-SHA256 Offline Activation Tokens and generates SHA-256 Cloud MCP Bearer Tokens (`mcp_live_...`).
 - **Device Slot Limit Enforcement:** Enforces hardware limits (Starter: 1, Pro: 3, Enterprise: 10) with idempotent re-activations and 1-click slot deactivations (`POST /api/v1/deactivate`).
 - **Client Portal (`/dashboard/*`):** 6 high-density views for practitioners (Overview, Licenses & Devices, Profile with Immutable Email Guard, Invoices & GST, API Logs, Support Desk).

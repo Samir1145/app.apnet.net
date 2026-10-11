@@ -1,6 +1,6 @@
 import { describe, it } from "node:test";
 import assert from "node:assert";
-import { extractManifestFiles, formatInstallCommand } from "../manifest-utils.ts";
+import { extractManifestFiles, formatInstallCommand } from "../manifest-utils";
 
 describe("ItemDetailModal & Manifest Helpers", () => {
   it("extracts readme, handler, and plugin from manifest files", () => {

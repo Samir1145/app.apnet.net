@@ -1,6 +1,6 @@
 import { describe, it } from "node:test";
 import assert from "node:assert";
-import { getItemCategoryConfig, formatItemVersion } from "../card-utils.ts";
+import { getItemCategoryConfig, formatItemVersion } from "../card-utils";
 
 describe("ItemCard Utility & Category Helpers", () => {
   it("resolves correct category config for agent skills", () => {
