@@ -1,0 +1,112 @@
+[
+  {
+    "id": "legal-dispute",
+    "name": "Legal & Dispute Resolution",
+    "icon": "Scale",
+    "description": "Statutory litigation, tribunal pleading automation, and forensic insolvency dispute analysis.",
+    "subdomains": [
+      {
+        "id": "corporate-insolvency",
+        "name": "Corporate Insolvency (IBC)",
+        "description": "Insolvency and Bankruptcy Code 2016, CIRP proceedings, avoidance PUFE forensics, and liquidation.",
+        "jurisdiction": "NCLT / NCLAT / Supreme Court"
+      },
+      {
+        "id": "commercial-arbitration",
+        "name": "Commercial Arbitration",
+        "description": "Domestic and international commercial dispute arbitration, claim quantification, and Section 34 challenges.",
+        "jurisdiction": "Arbitral Tribunals / High Courts"
+      },
+      {
+        "id": "debt-recovery-drt",
+        "name": "Debt Recovery & SARFAESI",
+        "description": "Banking enforcement, SARFAESI proceedings, DRT appeals, and debt settlement negotiations.",
+        "jurisdiction": "DRT / DRAT"
+      },
+      {
+        "id": "company-law-nclt",
+        "name": "Company Law & Oppression",
+        "description": "Sections 241-242 oppression & mismanagement petitions, mergers, and corporate restructuring.",
+        "jurisdiction": "NCLT / RoC"
+      }
+    ]
+  },
+  {
+    "id": "corporate-governance",
+    "name": "Corporate Governance & Compliance",
+    "icon": "Building2",
+    "description": "Regulatory filings, statutory registers, board minutes, and MCA21 secretarial audit automation.",
+    "subdomains": [
+      {
+        "id": "mca21-filings",
+        "name": "MCA21 & RoC Compliance",
+        "description": "Automated filing validation, DIR-3 KYC, AOC-4 / MGT-7 verification, and compliance calendars.",
+        "jurisdiction": "Ministry of Corporate Affairs"
+      },
+      {
+        "id": "board-governance",
+        "name": "Board Resolutions & Minutes",
+        "description": "Drafting Companies Act Section 173 board resolutions, AGM notices, and explanatory statements.",
+        "jurisdiction": "General Compliance"
+      },
+      {
+        "id": "sebi-listing-regulations",
+        "name": "SEBI & Capital Markets",
+        "description": "LODR disclosures, insider trading prevention (PIT), and takeover code compliance.",
+        "jurisdiction": "SEBI / Stock Exchanges"
+      }
+    ]
+  },
+  {
+    "id": "taxation-customs",
+    "name": "Taxation & Customs",
+    "icon": "Receipt",
+    "description": "Direct and indirect tax dispute forensics, GST show cause notices, and customs appeals.",
+    "subdomains": [
+      {
+        "id": "gst-litigation",
+        "name": "GST Litigation & Audits",
+        "description": "Input tax credit mismatch reconciliation, GSTR-9 audits, and appellate forum replies.",
+        "jurisdiction": "GST Appellate Authority / High Courts"
+      },
+      {
+        "id": "direct-tax-tribunal",
+        "name": "Income Tax & ITAT Appeals",
+        "description": "Assessment scrutiny replies, Section 148 reopening challenges, and ITAT appeal drafting.",
+        "jurisdiction": "ITAT / High Courts"
+      },
+      {
+        "id": "customs-foreign-trade",
+        "name": "Customs & Foreign Trade",
+        "description": "Tariff classification, DRI investigations, valuation challenges, and DGFT appeals.",
+        "jurisdiction": "CESTAT / DGFT"
+      }
+    ]
+  },
+  {
+    "id": "general-enterprise",
+    "name": "General Enterprise Intelligence",
+    "icon": "Cpu",
+    "description": "General purpose agentic reasoning, cross-document analysis, and secure air-gapped automation.",
+    "subdomains": [
+      {
+        "id": "document-forensics",
+        "name": "Document Forensics & OCR",
+        "description": "Multi-page forensic OCR, tabular data extraction, and signature/tampering analysis.",
+        "jurisdiction": "Enterprise"
+      },
+      {
+        "id": "contract-intelligence",
+        "name": "Contract Lifecycle Analysis",
+        "description": "Clause extraction, deviation scoring against standard chamber precedents, and liability caps.",
+        "jurisdiction": "Enterprise"
+      },
+      {
+        "id": "multi-agent-orchestration",
+        "name": "Multi-Agent Workflows",
+        "description": "Hierarchical agent teams, critic review patterns, and autonomous execution pipelines.",
+        "jurisdiction": "Enterprise"
+      }
+    ]
+  }
+]
