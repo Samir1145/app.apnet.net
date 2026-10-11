@@ -12,6 +12,8 @@
     "test": "node --import tsx src/tests/db.test.ts"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.1149.0",
+    "@aws-sdk/s3-request-presigner": "^3.1149.0",
     "@neondatabase/serverless": "^0.10.4",
     "@tanstack/react-table": "^8.21.2",
     "clsx": "^2.1.1",
