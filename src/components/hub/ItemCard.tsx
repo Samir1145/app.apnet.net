@@ -109,9 +109,23 @@ export function ItemCard({ item, onSelect }: ItemCardProps) {
         </div>
 
         {/* Description */}
-        <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed mb-4">
+        <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed mb-3">
           {item.description || 'No description provided for this sovereign resource.'}
         </p>
+
+        {/* Domain & Subdomain Taxonomy Badge */}
+        {(item.domain || item.subdomain) && (
+          <div className="flex items-center gap-1.5 flex-wrap mb-3">
+            <span className="text-[10px] font-medium px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 truncate max-w-[220px]">
+              {item.domain} › {item.subdomain}
+            </span>
+            {item.archetype && (
+              <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-md bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                {item.archetype}
+              </span>
+            )}
+          </div>
+        )}
 
         {/* Tags from agentregistry-dev styling */}
         {tags.length > 0 && (

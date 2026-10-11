@@ -7,11 +7,16 @@ import { ItemCard } from '@/components/hub/ItemCard';
 import { ItemDetailModal } from '@/components/hub/ItemDetailModal';
 import { PublishModal } from '@/components/hub/PublishModal';
 import { FleetSyncModal } from '@/components/hub/FleetSyncModal';
-import { Search, Sparkles, Shield, Cpu, RefreshCw, HardDrive, Lock } from 'lucide-react';
+import { TaxonomySidebar } from '@/components/hub/TaxonomySidebar';
+import { Search, Sparkles, RefreshCw, X } from 'lucide-react';
 import { HubItem } from '@/lib/db/schema';
+import { TaxonomyDomain } from '@/lib/taxonomy/types';
 
 export default function HubPage() {
   const [items, setItems] = useState<HubItem[]>([]);
+  const [taxonomyDomains, setTaxonomyDomains] = useState<TaxonomyDomain[]>([]);
+  const [selectedDomain, setSelectedDomain] = useState<string | null>(null);
+  const [selectedSubdomain, setSelectedSubdomain] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState('all');
@@ -21,7 +26,7 @@ export default function HubPage() {
   const [isSyncOpen, setIsSyncOpen] = useState(false);
   const [user, setUser] = useState<any>(null);
 
-  // Load User & Hub Items
+  // Load User & Hub Items & Taxonomy
   useEffect(() => {
     // Read user cookie
     const cookies = document.cookie.split('; ');
@@ -39,7 +44,7 @@ export default function HubPage() {
     const licCookie = cookies.find(c => c.startsWith('hayagriva_license_key='));
     const licenseKey = licCookie ? decodeURIComponent(licCookie.split('=')[1]) : 'HAYA-ENT-8F92-K4X9-98QA';
 
-    // Fetch initial items via sync (to get both public and chamber private if license exists)
+    // Fetch initial items via sync
     const fetchItems = async () => {
       setLoading(true);
       try {
@@ -66,12 +71,33 @@ export default function HubPage() {
       }
     };
 
+    const fetchTaxonomy = async () => {
+      try {
+        const res = await fetch('/api/v1/hub/taxonomy');
+        const data = await res.json();
+        if (data.success && Array.isArray(data.domains)) {
+          setTaxonomyDomains(data.domains);
+        }
+      } catch (err) {
+        console.error('Error fetching taxonomy tree:', err);
+      }
+    };
+
     fetchItems();
+    fetchTaxonomy();
   }, []);
 
   // Filter & Sort Items
   const filteredItems = useMemo(() => {
     let result = [...items];
+
+    // Taxonomy domain / subdomain filter
+    if (selectedDomain) {
+      result = result.filter(item => item.domain === selectedDomain);
+    }
+    if (selectedSubdomain) {
+      result = result.filter(item => item.subdomain === selectedSubdomain);
+    }
 
     // Category filter
     if (activeCategory === 'chamber') {
@@ -88,7 +114,10 @@ export default function HubPage() {
         const descMatch = (item.description || '').toLowerCase().includes(q);
         const tags = Array.isArray(item.tags) ? item.tags : [];
         const tagMatch = tags.some((t: any) => String(t).toLowerCase().includes(q));
-        return nameMatch || descMatch || tagMatch;
+        const domainMatch = (item.domain || '').toLowerCase().includes(q);
+        const subMatch = (item.subdomain || '').toLowerCase().includes(q);
+        const archMatch = (item.archetype || '').toLowerCase().includes(q);
+        return nameMatch || descMatch || tagMatch || domainMatch || subMatch || archMatch;
       });
     }
 
@@ -102,27 +131,39 @@ export default function HubPage() {
     }
 
     return result;
-  }, [items, activeCategory, searchQuery, sortBy]);
+  }, [items, selectedDomain, selectedSubdomain, activeCategory, searchQuery, sortBy]);
 
   // Dynamic counts for tabs
   const counts = useMemo(() => {
+    // base items respecting current taxonomy selection
+    let base = items;
+    if (selectedDomain) {
+      base = base.filter(i => i.domain === selectedDomain);
+    }
+    if (selectedSubdomain) {
+      base = base.filter(i => i.subdomain === selectedSubdomain);
+    }
+
     return {
-      all: items.length,
-      chamber: items.filter(i => i.visibility === 'PRIVATE_CHAMBER').length,
-      'agent-skill': items.filter(i => i.itemType === 'agent-skill').length,
-      'custom-agent': items.filter(i => i.itemType === 'custom-agent' || i.itemType === 'agent').length,
-      'legal-vault': items.filter(i => i.itemType === 'legal-vault' || i.itemType === 'bare-act-vault').length,
-      'ai-model': items.filter(i => i.itemType === 'ai-model' || i.itemType === 'slm-model').length,
-      'slash-command': items.filter(i => i.itemType === 'slash-command').length,
-      'system-prompt': items.filter(i => i.itemType === 'system-prompt').length,
-      'agent-flow': items.filter(i => i.itemType === 'agent-flow').length,
+      all: base.length,
+      chamber: base.filter(i => i.visibility === 'PRIVATE_CHAMBER').length,
+      'agent-skill': base.filter(i => i.itemType === 'agent-skill').length,
+      'custom-agent': base.filter(i => i.itemType === 'custom-agent' || i.itemType === 'agent').length,
+      'legal-vault': base.filter(i => i.itemType === 'legal-vault' || i.itemType === 'bare-act-vault').length,
+      'ai-model': base.filter(i => i.itemType === 'ai-model' || i.itemType === 'slm-model').length,
+      'slash-command': base.filter(i => i.itemType === 'slash-command').length,
+      'system-prompt': base.filter(i => i.itemType === 'system-prompt').length,
+      'agent-flow': base.filter(i => i.itemType === 'agent-flow').length,
     };
-  }, [items]);
+  }, [items, selectedDomain, selectedSubdomain]);
 
   const handlePublishSuccess = (newItem: HubItem) => {
     setItems(prev => [newItem, ...prev]);
     setSelectedItem(newItem);
   };
+
+  const activeDomainObj = taxonomyDomains.find(d => d.id === selectedDomain);
+  const activeSubdomainObj = activeDomainObj?.subdomains?.find(s => s.id === selectedSubdomain);
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col font-sans transition-colors">
@@ -144,7 +185,7 @@ export default function HubPage() {
               Discover, Publish &amp; Synchronize Sovereign AI Tools
             </h1>
             <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-              Explore agent skills, statutory prompts, and automated resolution flows. Directly synchronized with 100s of air-gapped local AnythingLLM instances across your chamber.
+              Explore 4 master legal &amp; enterprise domains: IBC avoidance auditors, commercial pleading writers, transfer pricing calculators, and regulatory vaults. Synchronized directly with local workstation instances.
             </p>
 
             {/* Live Search Bar */}
@@ -163,37 +204,99 @@ export default function HubPage() {
           </div>
         </div>
 
-        {/* Category Filter Tabs */}
-        <CategoryTabs
-          activeCategory={activeCategory}
-          setActiveCategory={setActiveCategory}
-          counts={counts}
-          sortBy={sortBy}
-          setSortBy={setSortBy}
-        />
+        {/* 2-Column Responsive Layout: Taxonomy Sidebar + Catalog Content */}
+        <div className="flex flex-col lg:flex-row gap-6 items-start">
+          {/* Left Taxonomy Tree Sidebar */}
+          <TaxonomySidebar
+            domains={taxonomyDomains}
+            selectedDomain={selectedDomain}
+            selectedSubdomain={selectedSubdomain}
+            onSelect={(dom, sub) => {
+              setSelectedDomain(dom);
+              setSelectedSubdomain(sub);
+            }}
+            totalCatalogCount={items.length}
+          />
 
-        {/* Catalog Grid */}
-        {loading ? (
-          <div className="py-16 text-center space-y-3">
-            <RefreshCw className="w-6 h-6 animate-spin mx-auto text-muted-foreground" />
-            <p className="text-xs text-muted-foreground">Loading Sovereign Catalog...</p>
+          {/* Right Main Content */}
+          <div className="flex-1 w-full space-y-4 min-w-0">
+            {/* Category Filter Tabs */}
+            <CategoryTabs
+              activeCategory={activeCategory}
+              setActiveCategory={setActiveCategory}
+              counts={counts}
+              sortBy={sortBy}
+              setSortBy={setSortBy}
+            />
+
+            {/* Active Taxonomy Filter Breadcrumb Bar */}
+            {(selectedDomain || selectedSubdomain) && (
+              <div className="flex items-center justify-between px-4 py-2.5 rounded-xl bg-card/90 border border-border/80 text-xs backdrop-blur-sm">
+                <div className="flex items-center gap-1.5 flex-wrap">
+                  <span className="text-muted-foreground">Practice Area:</span>
+                  <span className="font-semibold text-emerald-400">
+                    {activeDomainObj?.name || selectedDomain}
+                  </span>
+                  {selectedSubdomain && (
+                    <>
+                      <span className="text-muted-foreground">›</span>
+                      <span className="font-bold text-foreground">
+                        {activeSubdomainObj?.name || selectedSubdomain}
+                      </span>
+                    </>
+                  )}
+                  <span className="text-[10px] text-muted-foreground ml-1">
+                    ({filteredItems.length} {filteredItems.length === 1 ? 'item' : 'items'})
+                  </span>
+                </div>
+                <button
+                  onClick={() => {
+                    setSelectedDomain(null);
+                    setSelectedSubdomain(null);
+                  }}
+                  className="inline-flex items-center gap-1 text-[11px] text-muted-foreground hover:text-foreground transition-colors px-2 py-0.5 rounded-md hover:bg-secondary"
+                >
+                  <X className="w-3 h-3" />
+                  <span>Clear Filter</span>
+                </button>
+              </div>
+            )}
+
+            {/* Catalog Grid */}
+            {loading ? (
+              <div className="py-16 text-center space-y-3">
+                <RefreshCw className="w-6 h-6 animate-spin mx-auto text-muted-foreground" />
+                <p className="text-xs text-muted-foreground">Loading Sovereign Catalog...</p>
+              </div>
+            ) : filteredItems.length === 0 ? (
+              <div className="py-16 text-center bg-card border border-border rounded-2xl p-8 space-y-3">
+                <p className="text-sm font-semibold text-foreground">No resources matched your search query or domain filter.</p>
+                <p className="text-xs text-muted-foreground">Try clearing the domain selection or switching categories.</p>
+                <button
+                  onClick={() => {
+                    setSelectedDomain(null);
+                    setSelectedSubdomain(null);
+                    setActiveCategory('all');
+                    setSearchQuery('');
+                  }}
+                  className="px-3 py-1.5 rounded-xl text-xs bg-primary text-primary-foreground font-semibold"
+                >
+                  Reset All Filters
+                </button>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                {filteredItems.map((item) => (
+                  <ItemCard
+                    key={item.id}
+                    item={item}
+                    onSelect={(selected) => setSelectedItem(selected)}
+                  />
+                ))}
+              </div>
+            )}
           </div>
-        ) : filteredItems.length === 0 ? (
-          <div className="py-16 text-center bg-card border border-border rounded-2xl p-8 space-y-3">
-            <p className="text-sm font-semibold text-foreground">No resources matched your search query.</p>
-            <p className="text-xs text-muted-foreground">Try clearing the search or switching categories.</p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filteredItems.map((item) => (
-              <ItemCard
-                key={item.id}
-                item={item}
-                onSelect={(selected) => setSelectedItem(selected)}
-              />
-            ))}
-          </div>
-        )}
+        </div>
       </main>
 
       {/* Modals */}
