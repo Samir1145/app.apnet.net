@@ -81,6 +81,19 @@ export async function GET(request: Request) {
             .limit(1);
           user = userRecords[0] || null;
         }
+
+        // If activation wasn't in DB, check fallback in-memory store
+        if (!activation && license) {
+          activation = store.activations.find(
+            (a) =>
+              a.licenseId === license.id &&
+              a.hardwareFingerprint.trim() === fingerprint &&
+              a.isActive === true
+          );
+        }
+        if (!user && license) {
+          user = store.users.find((u) => u.id === license.userId);
+        }
       } catch (dbErr) {
         console.error('Error querying license/activation in DB, checking fallback store:', dbErr);
         license = store.licenses.find((l) => l.licenseKey.trim() === licenseKey.trim());

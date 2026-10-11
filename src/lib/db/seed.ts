@@ -15,7 +15,9 @@ export interface AdminStore {
   hubItems: HubItem[];
 }
 
-let globalStore: AdminStore | null = null;
+const globalWithStore = globalThis as typeof globalThis & {
+  __hayagrivaStore?: AdminStore;
+};
 
 export function seedInitialData(): AdminStore {
   const users: User[] = [
@@ -639,7 +641,7 @@ export function seedInitialData(): AdminStore {
     }
   ];
 
-  globalStore = {
+  globalWithStore.__hayagrivaStore = {
     users,
     systemLogs,
     invoices,
@@ -652,12 +654,12 @@ export function seedInitialData(): AdminStore {
     hubItems: seedHubData().hubItems
   };
 
-  return globalStore;
+  return globalWithStore.__hayagrivaStore;
 }
 
 export function getMockStore(): AdminStore {
-  if (!globalStore) {
+  if (!globalWithStore.__hayagrivaStore) {
     return seedInitialData();
   }
-  return globalStore;
+  return globalWithStore.__hayagrivaStore;
 }
