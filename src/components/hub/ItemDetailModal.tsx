@@ -135,9 +135,9 @@ export function ItemDetailModal({ item, onClose }: ItemDetailModalProps) {
           </button>
         </div>
 
-        {/* Tabbed Code Inspector View */}
+        {/* Tabbed Code & Taxonomy Inspector View */}
         <div className="p-6 flex-1 flex flex-col min-h-0 overflow-hidden">
-          <ManifestCodeViewer files={extractedFiles} />
+          <ManifestCodeViewer files={extractedFiles} item={item} />
         </div>
       </div>
     </div>
