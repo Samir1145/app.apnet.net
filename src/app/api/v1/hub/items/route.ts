@@ -1,44 +1,30 @@
 import { NextResponse } from 'next/server';
-import { getMockStore } from '@/lib/db/seed';
+import { getHubItems } from '../../../../../lib/db/queries/hub';
 
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    const category = searchParams.get('category');
-    const q = (searchParams.get('q') || '').trim().toLowerCase();
+    const category = searchParams.get('category') || undefined;
+    const q = (searchParams.get('q') || '').trim();
     const page = Math.max(1, parseInt(searchParams.get('page') || '1', 10));
     const limit = Math.max(1, parseInt(searchParams.get('limit') || '24', 10));
+    const orgId = searchParams.get('orgId') || undefined;
+    const includePrivate = searchParams.get('includePrivate') === 'true';
 
-    const store = getMockStore();
-    let allItems = (store.hubItems || []).filter(item => item.visibility === 'PUBLIC');
+    const { items, total } = await getHubItems({
+      category,
+      q,
+      page,
+      limit,
+      orgId,
+      includePrivate,
+    });
 
-    // Filter by category / itemType
-    if (category && category !== 'all') {
-      allItems = allItems.filter(item => item.itemType === category);
-    }
-
-    // Filter by query string
-    if (q) {
-      allItems = allItems.filter(item => {
-        const nameMatch = (item.name || '').toLowerCase().includes(q);
-        const descMatch = (item.description || '').toLowerCase().includes(q);
-        const tags = Array.isArray(item.tags) ? item.tags : [];
-        const tagMatch = tags.some((t: any) => String(t).toLowerCase().includes(q));
-        return nameMatch || descMatch || tagMatch;
-      });
-    }
-
-    // Sort by downloads descending
-    allItems.sort((a, b) => (b.downloads || 0) - (a.downloads || 0));
-
-    const total = allItems.length;
     const totalPages = Math.ceil(total / limit) || 1;
-    const offset = (page - 1) * limit;
-    const paginatedItems = allItems.slice(offset, offset + limit);
 
     return NextResponse.json({
       success: true,
-      items: paginatedItems,
+      items,
       total,
       page,
       limit,
