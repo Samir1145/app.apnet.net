@@ -1,15 +1,25 @@
 'use client';
 
 import React from 'react';
-import { LayoutGrid, Sparkles, Command, MessageSquare, GitFork, Database, SlidersHorizontal, Lock } from 'lucide-react';
+import { 
+  LayoutGrid, 
+  Zap, 
+  Bot, 
+  Database, 
+  Cpu, 
+  Command, 
+  Lock, 
+  SlidersHorizontal 
+} from 'lucide-react';
 
 export const CATEGORIES = [
   { id: 'all', name: 'All Resources', icon: LayoutGrid, countKey: null },
   { id: 'chamber', name: 'Chamber Private', icon: Lock, color: 'text-amber-500', isChamber: true },
-  { id: 'agent-skill', name: 'Agent Skills', icon: Sparkles, color: 'text-cyan-400' },
-  { id: 'slash-command', name: 'Slash Commands', icon: Command, color: 'text-purple-400' },
-  { id: 'system-prompt', name: 'System Prompts', icon: MessageSquare, color: 'text-emerald-400' },
-  { id: 'agent-flow', name: 'Agent Flows', icon: GitFork, color: 'text-blue-400' },
+  { id: 'agent-skill', name: 'Agent Skills', icon: Zap, color: 'text-cyan-400' },
+  { id: 'custom-agent', name: 'Autonomous Agents', icon: Bot, color: 'text-amber-400' },
+  { id: 'legal-vault', name: 'Statutory Vaults', icon: Database, color: 'text-emerald-400' },
+  { id: 'ai-model', name: 'AI Models (GGUF)', icon: Cpu, color: 'text-purple-400' },
+  { id: 'slash-command', name: 'Slash Commands', icon: Command, color: 'text-sky-400' },
 ];
 
 interface CategoryTabsProps {
@@ -40,18 +50,18 @@ export function CategoryTabs({
             <button
               key={cat.id}
               onClick={() => setActiveCategory(cat.id)}
-              className={`px-3.5 py-2 rounded-xl text-xs font-semibold flex items-center gap-2 whitespace-nowrap transition-all ${
+              className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 whitespace-nowrap transition-all ${
                 isSelected
-                  ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20 font-bold'
-                  : 'bg-card hover:bg-secondary text-muted-foreground hover:text-foreground border border-border'
+                  ? 'bg-primary text-primary-foreground shadow-md font-bold'
+                  : 'bg-card/70 hover:bg-secondary text-muted-foreground hover:text-foreground border border-border/80'
               }`}
             >
-              <Icon className={`w-3.5 h-3.5 ${isSelected ? 'text-slate-950' : cat.color || 'text-muted-foreground'}`} />
+              <Icon className={`w-3.5 h-3.5 ${isSelected ? 'text-primary-foreground' : cat.color || 'text-muted-foreground'}`} />
               <span>{cat.name}</span>
               <span
                 className={`text-[10px] px-1.5 py-0.5 rounded-full font-mono ${
                   isSelected
-                    ? 'bg-slate-950/20 text-slate-950 font-extrabold'
+                    ? 'bg-primary-foreground/20 text-primary-foreground font-extrabold'
                     : 'bg-secondary text-muted-foreground'
                 }`}
               >
@@ -71,7 +81,7 @@ export function CategoryTabs({
         <select
           value={sortBy}
           onChange={(e) => setSortBy(e.target.value)}
-          className="bg-card border border-border text-foreground text-xs rounded-xl px-2.5 py-1.5 outline-none focus:border-amber-500/50 cursor-pointer shadow-sm"
+          className="bg-card border border-border text-foreground text-xs rounded-xl px-2.5 py-1.5 outline-none focus:border-primary/50 cursor-pointer shadow-sm"
         >
           <option value="downloads">Most Popular (Downloads)</option>
           <option value="recent">Recently Added</option>
