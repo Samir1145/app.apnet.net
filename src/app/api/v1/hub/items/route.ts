@@ -5,6 +5,9 @@ export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const category = searchParams.get('category') || undefined;
+    const domain = searchParams.get('domain') || undefined;
+    const subdomain = searchParams.get('subdomain') || undefined;
+    const archetype = searchParams.get('archetype') || undefined;
     const q = (searchParams.get('q') || '').trim();
     const page = Math.max(1, parseInt(searchParams.get('page') || '1', 10));
     const limit = Math.max(1, parseInt(searchParams.get('limit') || '24', 10));
@@ -13,6 +16,9 @@ export async function GET(request: Request) {
 
     const { items, total } = await getHubItems({
       category,
+      domain,
+      subdomain,
+      archetype,
       q,
       page,
       limit,

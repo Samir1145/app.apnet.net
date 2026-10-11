@@ -42,11 +42,29 @@ export async function POST(request: Request) {
 
     const id = `hub_${Date.now()}_${Math.random().toString(36).substring(7)}`;
     const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    const domain = body.domain || manifest?.taxonomy?.domain || 'legal-dispute';
+    const subdomain = body.subdomain || manifest?.taxonomy?.subdomain || 'corporate-insolvency';
+    const archetype = body.archetype || manifest?.taxonomy?.archetype || null;
+    const urn = body.urn || manifest?.urn || null;
+    const requiredSkills = Array.isArray(body.requiredSkills)
+      ? body.requiredSkills
+      : Array.isArray(manifest?.capabilities?.skills)
+      ? manifest.capabilities.skills
+      : [];
+    const statutoryVaults = Array.isArray(body.statutoryVaults)
+      ? body.statutoryVaults
+      : Array.isArray(manifest?.capabilities?.statutoryVaults)
+      ? manifest.capabilities.statutoryVaults
+      : [];
 
     const newItem: HubItem = {
       id,
       userId,
       orgId: visibility === 'PRIVATE_CHAMBER' ? orgId : null,
+      urn,
+      domain,
+      subdomain,
+      archetype,
       itemType,
       name,
       slug,
@@ -55,6 +73,8 @@ export async function POST(request: Request) {
       verified: false,
       downloads: 0,
       tags: Array.isArray(tags) ? tags : [],
+      requiredSkills,
+      statutoryVaults,
       manifest: manifest || { files: [] },
       importId: `import_${id}`,
       authorName: authorName || (userId ? 'Chamber Member' : 'Community Contributor'),

@@ -7,6 +7,9 @@ import { desc, eq, and, or, sql, ilike } from 'drizzle-orm';
 export interface FilterHubOptions {
   category?: string;
   q?: string;
+  domain?: string;
+  subdomain?: string;
+  archetype?: string;
   visibility?: 'PUBLIC' | 'PRIVATE_CHAMBER' | 'ALL';
   includePrivate?: boolean;
   orgId?: string | null;
@@ -36,6 +39,21 @@ export function filterHubItems(
   // Category / itemType
   if (options.category && options.category !== 'all') {
     filtered = filtered.filter((item) => item.itemType === options.category);
+  }
+
+  // Domain filter
+  if (options.domain && options.domain !== 'all') {
+    filtered = filtered.filter((item) => item.domain === options.domain);
+  }
+
+  // Subdomain filter
+  if (options.subdomain && options.subdomain !== 'all') {
+    filtered = filtered.filter((item) => item.subdomain === options.subdomain);
+  }
+
+  // Archetype filter
+  if (options.archetype && options.archetype !== 'all') {
+    filtered = filtered.filter((item) => item.archetype === options.archetype);
   }
 
   // Search query
@@ -95,6 +113,18 @@ export async function getHubItems(options: FilterHubOptions = {}): Promise<{ ite
       conditions.push(eq(hubItems.itemType, options.category));
     }
 
+    if (options.domain && options.domain !== 'all') {
+      conditions.push(eq(hubItems.domain, options.domain));
+    }
+
+    if (options.subdomain && options.subdomain !== 'all') {
+      conditions.push(eq(hubItems.subdomain, options.subdomain));
+    }
+
+    if (options.archetype && options.archetype !== 'all') {
+      conditions.push(eq(hubItems.archetype, options.archetype));
+    }
+
     if (options.q && options.q.trim()) {
       const pattern = `%${options.q.trim()}%`;
       conditions.push(
@@ -150,4 +180,54 @@ export async function getHubItemById(id: string): Promise<HubItem | null> {
     const store = getMockStore();
     return store.hubItems.find((item) => item.id === id) || null;
   }
+}
+
+export async function getTaxonomyTree(options: {
+  includePrivate?: boolean;
+  orgId?: string | null;
+} = {}) {
+  const { getMasterTaxonomy } = await import('../../taxonomy/types');
+  const master = getMasterTaxonomy();
+
+  // Clone master domains to avoid mutation
+  const tree = JSON.parse(JSON.stringify(master));
+
+  // Fetch all items within current visibility scope
+  const { items } = await getHubItems({
+    visibility: 'ALL',
+    includePrivate: options.includePrivate,
+    orgId: options.orgId,
+    limit: 10000,
+  });
+
+  // Map counts per domain and subdomain
+  for (const domain of tree) {
+    for (const sub of domain.subdomains) {
+      const subItems = items.filter(
+        (i: any) => i.domain === domain.id && i.subdomain === sub.id
+      );
+      sub.agentCount = subItems.filter((i: any) => {
+        if (i.urn?.startsWith('agent:')) return true;
+        return i.itemType === 'agent' || i.itemType === 'agent-flow';
+      }).length;
+
+      sub.skillCount = subItems.filter((i: any) => {
+        if (i.urn?.startsWith('skill:') || i.urn?.startsWith('command:')) return true;
+        return i.itemType === 'skill' || i.itemType === 'agent-skill' || i.itemType === 'slash-command';
+      }).length;
+
+      sub.vaultCount = subItems.filter((i: any) => {
+        if (i.urn?.startsWith('vault:')) return true;
+        return i.itemType === 'vault' || i.itemType === 'data-connector';
+      }).length;
+
+      (sub as any).totalCount = subItems.length;
+    }
+    (domain as any).totalCount = domain.subdomains.reduce(
+      (acc: number, s: any) => acc + (s.totalCount || 0),
+      0
+    );
+  }
+
+  return tree;
 }
