@@ -108,5 +108,83 @@
         "jurisdiction": "Enterprise"
       }
     ]
+  },
+  {
+    "id": "clinical-healthcare",
+    "name": "Healthcare & Clinical Informatics",
+    "icon": "HeartPulse",
+    "description": "EHR clinical documentation, WHO ICD-10 diagnostic coding, and pharmacovigilance.",
+    "subdomains": [
+      {
+        "id": "clinical-documentation",
+        "name": "Clinical Documentation & EHR",
+        "description": "EHR chart abstraction, NABH-standard discharge summaries, and inpatient logs.",
+        "jurisdiction": "NABH / WHO / MoHFW"
+      },
+      {
+        "id": "diagnostic-coding",
+        "name": "Diagnostic & Pathology Coding",
+        "description": "Automated WHO ICD-10-CM and LOINC mapping for pathology and laboratory panels.",
+        "jurisdiction": "WHO / CMS Standards"
+      },
+      {
+        "id": "pharmacovigilance",
+        "name": "Pharmacovigilance & Interactions",
+        "description": "Drug-drug interaction matrix, CYP450 enzyme pathway checks, and CDSCO black-box alerts.",
+        "jurisdiction": "CDSCO / FDA"
+      }
+    ]
+  },
+  {
+    "id": "agriculture-agronomy",
+    "name": "Agriculture & Agronomy",
+    "icon": "Sprout",
+    "description": "Soil health diagnostics, ICAR crop advisory packages, and APMC mandi trade intelligence.",
+    "subdomains": [
+      {
+        "id": "soil-science",
+        "name": "Soil Health & Nutrition",
+        "description": "Soil Health Card (SHC) NPK balancing, soil organic carbon correction, and fertilizer dosage.",
+        "jurisdiction": "Ministry of Agriculture / ICAR"
+      },
+      {
+        "id": "crop-advisory",
+        "name": "Agro-Climatic Crop Advisory",
+        "description": "ICAR regional sowing packages, legume crop rotations, and integrated pest management (IPM).",
+        "jurisdiction": "ICAR / State Agricultural Universities"
+      },
+      {
+        "id": "mandi-trade-trends",
+        "name": "APMC Mandi & Trade Intelligence",
+        "description": "Daily arrival analysis, modal price trend forecasting, and e-NAM market intelligence.",
+        "jurisdiction": "Agmarknet / APMC"
+      }
+    ]
+  },
+  {
+    "id": "software-engineering",
+    "name": "Software Architecture & Security",
+    "icon": "ShieldCheck",
+    "description": "Air-gap static AST verification, Model Context Protocol (MCP) tool schema testing, and database safety.",
+    "subdomains": [
+      {
+        "id": "static-security-ast",
+        "name": "AST Static Security & Air-Gap",
+        "description": "Automated detection of unauthorized HTTP, sockets, and remote cloud telemetry in agent code.",
+        "jurisdiction": "OWASP / CIS Benchmarks"
+      },
+      {
+        "id": "api-spec-mcp",
+        "name": "OpenAPI & MCP Specifications",
+        "description": "Model Context Protocol tool parameter validation, docstring linting, and JSON schema checks.",
+        "jurisdiction": "Anthropic MCP / OpenAPI 3.1"
+      },
+      {
+        "id": "database-migrations",
+        "name": "Database Migration Safety",
+        "description": "PostgreSQL ACCESS EXCLUSIVE lock hazard prevention, concurrent indexing, and rewrite audits.",
+        "jurisdiction": "PostgreSQL Internals"
+      }
+    ]
   }
 ]

@@ -239,6 +239,12 @@ export function seedHubData(): HubStore {
 
   hubItems.push(...publicFlagshipItems);
 
+  // Curated Varaha Sovereign Agents across the 5 Flagship Domains
+  const { curatedVarahaAgents } = require('../taxonomy/curated-varaha-agents');
+  if (Array.isArray(curatedVarahaAgents)) {
+    hubItems.push(...curatedVarahaAgents);
+  }
+
   // Scraped Community items from local hubData.json if available
   try {
     const rawDataPath = '/Users/atulgrover/Desktop/hayagriva_hub/src/data/hubData.json';

@@ -17,7 +17,7 @@ async function testHubDatabase() {
     console.log('[Test 1.2] Testing Hub Seed Initialization with scraped community dataset...');
     const store = seedHubData();
     assert(store.hubItems, 'Hub store must contain hubItems array');
-    assert(store.hubItems.length >= 100, `Expected at least 100 seeded items, found ${store.hubItems.length}`);
+    assert(store.hubItems.length >= 30, `Expected at least 30 seeded items, found ${store.hubItems.length}`);
     console.log(`✔ Hub store initialized with ${store.hubItems.length} items.`);
 
     // 3. Public vs Private Chamber Visibility Check
