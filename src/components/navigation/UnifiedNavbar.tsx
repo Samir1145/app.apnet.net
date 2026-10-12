@@ -76,15 +76,15 @@ export function UnifiedNavbar({ onOpenPublish, onTriggerSync }: UnifiedNavbarPro
         {/* Navigation Tabs */}
         <nav className="flex items-center space-x-1 sm:space-x-2">
           <Link
-            href="/hub"
+            href="/dashboard/agents?tab=bazaar"
             className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all flex items-center gap-1.5 ${
-              pathname.startsWith('/hub')
+              (pathname.includes('/agents') || pathname.startsWith('/hub'))
                 ? 'bg-secondary text-foreground shadow-sm font-semibold'
                 : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'
             }`}
           >
             <Compass className="w-3.5 h-3.5 text-amber-500" />
-            <span>Community Hub</span>
+            <span>Resolution Bazaar</span>
           </Link>
 
           <Link

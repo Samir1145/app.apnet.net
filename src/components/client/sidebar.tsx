@@ -13,7 +13,8 @@ import {
   DownloadCloud,
   Database,
   Cpu,
-  Bot
+  Bot,
+  Sparkles
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -34,13 +35,14 @@ const navSections: NavSection[] = [
     title: 'Chamber Workspace',
     items: [
       { name: 'Overview', href: '/dashboard', icon: LayoutDashboard },
-      { name: 'Agent Studio', href: '/dashboard/agents', icon: Bot, badge: 'Core' },
+      { name: 'Agent Studio', href: '/dashboard/agents', icon: Bot, badge: 'Studio' },
       { name: 'Desktop Harness', href: '/dashboard/harness', icon: DownloadCloud },
     ]
   },
   {
     title: 'Sovereign Catalogs',
     items: [
+      { name: 'Resolution Bazaar', href: '/dashboard/agents?tab=bazaar', icon: Sparkles, badge: 'Community' },
       { name: 'Statutory Vaults', href: '/dashboard/vaults', icon: Database },
       { name: 'BharatGen Models', href: '/dashboard/models', icon: Cpu },
     ]
@@ -96,7 +98,14 @@ export function ClientSidebar() {
               {section.title}
             </div>
             {section.items.map((item) => {
-              const isActive = pathname === item.href || (item.href !== '/dashboard' && pathname.startsWith(item.href));
+              const itemBase = item.href.split('?')[0];
+              const queryPart = item.href.includes('?') ? item.href.split('?')[1] : null;
+              let isActive = false;
+              if (queryPart && typeof window !== 'undefined') {
+                isActive = pathname === itemBase && window.location.search.includes(queryPart);
+              } else {
+                isActive = pathname === item.href || (item.href !== '/dashboard' && !item.href.includes('?') && pathname.startsWith(item.href));
+              }
               const Icon = item.icon;
 
               return (
