@@ -84,7 +84,7 @@ export function UnifiedNavbar({ onOpenPublish, onTriggerSync }: UnifiedNavbarPro
             }`}
           >
             <Compass className="w-3.5 h-3.5 text-amber-500" />
-            <span>Resolution Bazaar</span>
+            <span>Varaha Agents</span>
           </Link>
 
           <Link

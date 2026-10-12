@@ -361,10 +361,10 @@ export default function AdminAgentsDirectoryPage() {
         <div>
           <div className="flex items-center gap-2 mb-2">
             <span className="text-xs font-bold font-mono px-2.5 py-0.5 rounded-full bg-amber-500/15 text-amber-500 border border-amber-500/30">
-              AGENT FOUNDRY GOVERNANCE
+              VARAHA AGENTIC STUDIO GOVERNANCE
             </span>
             <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-purple-500/15 text-purple-400 border border-purple-500/30">
-              In-Chamber Cartridge Ecosystem
+              Sovereign Cartridge Ecosystem
             </span>
             <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 flex items-center gap-1">
               <ShieldCheck className="w-3.5 h-3.5" />
@@ -373,10 +373,10 @@ export default function AdminAgentsDirectoryPage() {
           </div>
           <h1 className="text-2xl font-bold tracking-tight text-foreground flex items-center gap-2.5">
             <Bot className="w-7 h-7 text-amber-500" />
-            Agent Cartridges & Foundry Moderation
+            Varaha Agentic Studio &amp; Cartridge Accreditation
           </h1>
           <p className="text-sm text-muted-foreground mt-1 max-w-3xl">
-            Govern custom legal coworkers, audit .haya cartridge manifests, enforce statutory prompt rules, and promote community agents to Official Chamber Templates.
+            Govern multi-domain coworkers, audit .haya cartridge manifests for zero-egress compliance, enforce statutory prompt rules, and stamp community agents with Varaha Official Accreditation.
           </p>
         </div>
 
