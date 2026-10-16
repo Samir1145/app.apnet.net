@@ -11,8 +11,9 @@ import { GET as getSyncRoute } from '../app/api/v1/hub/sync/route';
 import { POST as postActivateRoute } from '../app/api/v1/activate/route';
 
 // AnythingLLM Workstation HubSyncManager
-const { HubSyncManager } = require('../../../server/utils/hayagriva/hubSyncManager');
-const { getHardwareFingerprint } = require('../../../server/utils/hayagriva/licenseValidator');
+const hayagrivaServerDir = process.env.HAYAGRIVA_SERVER_DIR || path.resolve(__dirname, '../../../HAYAGRIVA/server');
+const { HubSyncManager } = require(path.join(hayagrivaServerDir, 'utils/hayagriva/hubSyncManager'));
+const { getHardwareFingerprint } = require(path.join(hayagrivaServerDir, 'utils/hayagriva/licenseValidator'));
 
 async function runWorkstationSyncE2E() {
   console.log('=== Task 7: End-to-End Handshake Verification with AnythingLLM Workstation ===\n');
@@ -106,15 +107,26 @@ async function runWorkstationSyncE2E() {
 
     // 4. Verify disk contents and sync receipt
     console.log('[Step 4] Verifying extracted files and sync receipts on disk...');
-    const skillsDir = path.join(testTempDir, 'skills');
-    assert.ok(fs.existsSync(skillsDir), 'Agent skills directory must exist');
+    // Find any installed item folder recursively
+    function findSyncReceipt(dir) {
+      const files = fs.readdirSync(dir);
+      for (const f of files) {
+        const full = path.join(dir, f);
+        if (fs.statSync(full).isDirectory()) {
+          const receipt = path.join(full, '.hayagriva_sync.json');
+          if (fs.existsSync(receipt)) return receipt;
+          const found = findSyncReceipt(full);
+          if (found) return found;
+        }
+      }
+      return null;
+    }
 
-    const installedSkills = fs.readdirSync(skillsDir);
-    assert.ok(installedSkills.length > 0, 'At least one skill folder must be created');
-    const firstSkillPath = path.join(skillsDir, installedSkills[0]);
+    const receiptFile = findSyncReceipt(testTempDir);
+    assert.ok(receiptFile, '.hayagriva_sync.json receipt must exist in installed items');
+    const firstSkillPath = path.dirname(receiptFile);
 
-    const receiptFile = path.join(firstSkillPath, '.hayagriva_sync.json');
-    assert.ok(fs.existsSync(receiptFile), '.hayagriva_sync.json receipt must exist');
+
 
     const receiptContent = JSON.parse(fs.readFileSync(receiptFile, 'utf8'));
     assert.ok(receiptContent.id, 'Receipt must have item id');

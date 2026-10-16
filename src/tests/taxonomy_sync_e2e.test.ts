@@ -57,7 +57,8 @@ describe('E2E Taxonomy Dictionary & Workstation Fleet Sync Roundtrip', () => {
     assert.ok(Array.isArray(syncData.items));
 
     // 4. Test fleet sync unpacking into domain hierarchy using HubSyncManager
-    const { HubSyncManager } = require('../../../server/utils/hayagriva/hubSyncManager');
+    const hayagrivaServerDir = process.env.HAYAGRIVA_SERVER_DIR || path.resolve(__dirname, '../../../HAYAGRIVA/server');
+const { HubSyncManager } = require(path.join(hayagrivaServerDir, 'utils/hayagriva/hubSyncManager'));
     const manager = new HubSyncManager({
       fetchFn: async () => ({
         ok: true,
