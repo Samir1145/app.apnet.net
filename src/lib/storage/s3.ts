@@ -2,11 +2,15 @@
 import { S3Client, GetObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
-const s3Bucket = process.env.S3_BUCKET_NAME || 'resolution-bazaar-assets';
-const s3Region = process.env.S3_REGION || 'us-east-1';
-const s3Endpoint = process.env.S3_ENDPOINT;
-const accessKeyId = process.env.S3_ACCESS_KEY_ID || process.env.AWS_ACCESS_KEY_ID;
-const secretAccessKey = process.env.S3_SECRET_ACCESS_KEY || process.env.AWS_SECRET_ACCESS_KEY;
+// Support both Cloudflare R2 (from VARAHA) and standard AWS S3
+const r2AccountId = process.env.R2_ACCOUNT_ID;
+const s3Bucket = process.env.R2_BUCKET_NAME || process.env.S3_BUCKET_NAME || 'hayagriva';
+const s3Region = r2AccountId ? 'auto' : (process.env.S3_REGION || 'us-east-1');
+const s3Endpoint = r2AccountId
+  ? `https://${r2AccountId}.r2.cloudflarestorage.com`
+  : process.env.S3_ENDPOINT;
+const accessKeyId = process.env.R2_ACCESS_KEY_ID || process.env.S3_ACCESS_KEY_ID || process.env.AWS_ACCESS_KEY_ID;
+const secretAccessKey = process.env.R2_SECRET_ACCESS_KEY || process.env.S3_SECRET_ACCESS_KEY || process.env.AWS_SECRET_ACCESS_KEY;
 
 let s3ClientInstance: S3Client | null = null;
 

@@ -21,10 +21,11 @@ import { getItemCategoryConfig, formatItemVersion } from './card-utils';
 
 interface ItemCardProps {
   item: HubItem;
-  onSelect: (item: HubItem) => void;
+  onSelect?: (item: HubItem) => void;
+  onClick?: () => void;
 }
 
-export function ItemCard({ item, onSelect }: ItemCardProps) {
+export function ItemCard({ item, onSelect, onClick }: ItemCardProps) {
   const [copied, setCopied] = useState(false);
 
   const categoryConfig = getItemCategoryConfig(item.itemType);
@@ -59,7 +60,7 @@ export function ItemCard({ item, onSelect }: ItemCardProps) {
 
   return (
     <div
-      onClick={() => onSelect(item)}
+      onClick={() => (onClick ? onClick() : onSelect?.(item))}
       className={`group bg-card/60 hover:bg-card border rounded-2xl p-5 flex flex-col justify-between transition-all duration-200 cursor-pointer shadow-sm hover:shadow-xl relative overflow-hidden backdrop-blur-sm ${
         isPrivate 
           ? 'border-amber-500/40 hover:border-amber-500 hover:shadow-amber-500/10' 

@@ -510,7 +510,6 @@ function AgentsContent() {
 
       {/* Modals for Community Bazaar */}
       <ItemDetailModal
-        isOpen={!!selectedItem}
         onClose={() => setSelectedItem(null)}
         item={selectedItem}
       />

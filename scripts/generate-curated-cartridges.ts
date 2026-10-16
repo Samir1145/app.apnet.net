@@ -28,7 +28,7 @@ async function main() {
     const medallionColor = DOMAIN_MEDALLION_COLORS[agent.domain] || '#f59e0b';
     
     // Extract prompt from manifest if present
-    const promptFile = (agent.manifest?.files || []).find((f: any) => f.name === 'prompt.md' || f.name === 'prompt.txt');
+    const promptFile = ((agent.manifest as any)?.files || []).find((f: any) => f.name === 'prompt.md' || f.name === 'prompt.txt');
     const systemPrompt = promptFile?.content || `# System Prompt for ${agent.name}\nYou are an air-gapped sovereign agent in the ${agent.domain} domain.`;
 
     const slashTrigger = (agent.tags || []).find((t: string) => t.startsWith('/')) || `/${slug}`;

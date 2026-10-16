@@ -24,19 +24,22 @@ export const CATEGORIES = [
 
 interface CategoryTabsProps {
   activeCategory: string;
-  setActiveCategory: (cat: string) => void;
+  setActiveCategory?: (cat: string) => void;
+  onSelectCategory?: (cat: string) => void;
   counts: Record<string, number>;
-  sortBy: string;
-  setSortBy: (sort: string) => void;
+  sortBy?: string;
+  setSortBy?: (sort: string) => void;
 }
 
 export function CategoryTabs({
   activeCategory,
   setActiveCategory,
+  onSelectCategory,
   counts = {},
-  sortBy,
-  setSortBy,
+  sortBy = "popular",
+  setSortBy = () => {},
 }: CategoryTabsProps) {
+  const handleCategoryChange = onSelectCategory || setActiveCategory || (() => {});
   return (
     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-border">
       {/* Category Pills */}
@@ -49,7 +52,7 @@ export function CategoryTabs({
           return (
             <button
               key={cat.id}
-              onClick={() => setActiveCategory(cat.id)}
+              onClick={() => handleCategoryChange(cat.id)}
               className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 whitespace-nowrap transition-all ${
                 isSelected
                   ? 'bg-primary text-primary-foreground shadow-md font-bold'
